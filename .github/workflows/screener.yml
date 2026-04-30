@@ -25,9 +25,6 @@ jobs:
 
       - name: Screener ausführen
         env:
-          MAIL_USER:      ${{ secrets.MAIL_USER }}
-          MAIL_PASS:      ${{ secrets.MAIL_PASS }}
-          MAIL_TO:        ${{ secrets.MAIL_TO }}
-          MAIL_SMTP_HOST: smtp.gmail.com
-          MAIL_SMTP_PORT: "587"
-        run: python run.py --no-open
+  RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+  MAIL_FROM:      ${{ secrets.MAIL_FROM }}
+  MAIL_TO:        ${{ secrets.MAIL_TO }}
