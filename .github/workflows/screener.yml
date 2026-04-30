@@ -9,6 +9,8 @@ jobs:
   screener:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: write
 
     steps:
       - name: Repository auschecken
@@ -23,8 +25,12 @@ jobs:
         run: pip install yfinance numpy pandas --quiet
 
       - name: Screener ausführen
-        env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          MAIL_FROM: ${{ secrets.MAIL_FROM }}
-          MAIL_TO: ${{ secrets.MAIL_TO }}
-        run: python run.py --no-open
+        run: python run.py
+
+      - name: Report auf GitHub veröffentlichen
+        run: |
+          git config user.name "Screener Bot"
+          git config user.email "screener@wortmann-wember.de"
+          git add docs/
+          git diff --staged --quiet || git commit -m "Report $(date +'%Y-%m-%d %H:%M') UTC"
+          git push
