@@ -1,0 +1,33 @@
+name: Swing Trade Screener
+
+on:
+  schedule:
+    # Täglich um 07:30 UTC = 09:30 MESZ (Sommerzeit) / 08:30 MEZ (Winterzeit)
+    - cron: '30 7 * * 1-5'
+  workflow_dispatch:  # Manueller Start per Knopfdruck jederzeit möglich
+
+jobs:
+  screener:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Abhängigkeiten installieren
+        run: pip install yfinance numpy pandas --quiet
+
+      - name: Screener ausführen
+        env:
+          MAIL_USER:      ${{ secrets.MAIL_USER }}
+          MAIL_PASS:      ${{ secrets.MAIL_PASS }}
+          MAIL_TO:        ${{ secrets.MAIL_TO }}
+          MAIL_SMTP_HOST: smtp.gmail.com
+          MAIL_SMTP_PORT: "587"
+        run: python run.py --no-open
