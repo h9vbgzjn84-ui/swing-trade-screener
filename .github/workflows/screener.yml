@@ -2,9 +2,8 @@ name: Swing Trade Screener
 
 on:
   schedule:
-    # Täglich um 07:30 UTC = 09:30 MESZ (Sommerzeit) / 08:30 MEZ (Winterzeit)
     - cron: '30 7 * * 1-5'
-  workflow_dispatch:  # Manueller Start per Knopfdruck jederzeit möglich
+  workflow_dispatch:
 
 jobs:
   screener:
@@ -25,6 +24,7 @@ jobs:
 
       - name: Screener ausführen
         env:
-  RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-  MAIL_FROM:      ${{ secrets.MAIL_FROM }}
-  MAIL_TO:        ${{ secrets.MAIL_TO }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          MAIL_FROM: ${{ secrets.MAIL_FROM }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+        run: python run.py --no-open
