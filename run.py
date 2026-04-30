@@ -1,7 +1,6 @@
 """
-run.py – Swing Trade Screener für GitHub Actions
+run.py – Swing Trade Screener für GitHub Actions mit GitHub Pages
 Wortmann & Wember GmbH
-Läuft täglich auf GitHub's Servern – kein lokaler Rechner nötig.
 """
 
 import logging, sys
@@ -33,16 +32,15 @@ def run():
 
     log.info("SCHRITT 2: HTML-Report erstellen…")
     from report_generator import generate_report
-    Path("reports").mkdir(exist_ok=True)
-    path = generate_report(results, f"reports/report_{datetime.now().strftime('%Y%m%d_%H%M')}.html")
-    log.info(f"  → {path}")
 
-    log.info("SCHRITT 3: E-Mail senden…")
-    from mailer import send_report
-    ok = send_report(results, path)
-    if not ok:
-        log.error("E-Mail-Versand fehlgeschlagen!")
-        sys.exit(1)
+    # Haupt-Report (mit Datum)
+    Path("docs").mkdir(exist_ok=True)
+    dated = f"docs/report_{datetime.now().strftime('%Y%m%d')}.html"
+    generate_report(results, dated)
+
+    # index.html = immer aktuellster Report (für GitHub Pages)
+    generate_report(results, "docs/index.html")
+    log.info(f"  → docs/index.html (GitHub Pages)")
 
     top = next((r for r in results if r.get("best_score") and r["best_score"]["pct"] >= 60), None)
     log.info("-" * 55)
