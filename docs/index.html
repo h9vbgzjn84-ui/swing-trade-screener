@@ -1,0 +1,863 @@
+<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Swing Trade Screener – 30.04.2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#070707;color:#ccc;font-family:'Courier New',monospace;padding:22px;max-width:1100px;margin:0 auto;line-height:1.4}
+.hdr{border-bottom:1px solid rgba(255,255,255,0.05);padding-bottom:14px;margin-bottom:20px}
+.hr{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px}
+.brand{color:#00e676;font-size:8px;letter-spacing:.22em;margin-bottom:4px}
+h1{color:#e0e0e0;font-size:19px;letter-spacing:.04em}
+.sub{color:#1e1e1e;font-size:9px;margin-top:3px}
+.di{color:#222;font-size:9px;text-align:right;line-height:1.8}
+.tb{background:rgba(0,230,118,0.03);border:1px solid rgba(0,230,118,0.12);border-radius:7px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.fi{background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.04);border-radius:5px;padding:10px 14px;margin-bottom:18px}
+.ft{color:#1c1c1c;font-size:7px;letter-spacing:.15em;margin-bottom:8px}
+.ftags{display:flex;gap:5px;flex-wrap:wrap}
+.ftag{padding:3px 9px;border-radius:3px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);color:#2e2e2e;font-size:9px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:11px}
+.card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:14px}
+.ch{display:flex;justify-content:space-between;margin-bottom:10px}
+.ct{display:flex;align-items:flex-start;gap:9px}
+.sym{color:#ddd;font-size:13px;font-weight:bold}
+.nm{color:#333;font-size:9px;margin-top:1px}
+.pr{color:#555;font-size:11px;margin-top:3px}
+.rb{padding:3px 8px;border-radius:3px;font-size:8px;letter-spacing:.07em;border:1px solid}
+.dir-badge{padding:3px 8px;border-radius:3px;font-size:9px;font-weight:bold;letter-spacing:.05em;border:1px solid}
+.sw{margin-bottom:6px}
+.st{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden}
+.sf{height:100%;border-radius:2px}
+.sr{display:flex;justify-content:space-between;margin-top:4px}
+.sc-row{display:flex;gap:10px;font-size:10px;font-family:monospace;margin-bottom:8px;padding:4px 8px;background:rgba(255,255,255,0.02);border-radius:3px}
+.badges{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:9px}
+.badge{padding:2px 6px;border-radius:3px;font-size:9px;border:1px solid;letter-spacing:.03em}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:9px}
+.metric{border-radius:4px;padding:6px 8px;border:1px solid}
+.ml{color:#2a2a2a;font-size:7px;letter-spacing:.1em;margin-bottom:2px}
+.mv{font-size:11px;font-weight:bold}
+.ad summary{color:#2a2a2a;font-size:9px;cursor:pointer;letter-spacing:.08em;padding:5px 0;list-style:none;user-select:none}
+.ad summary::before{content:"▶ ";color:#00e676;font-size:7px}
+.ad[open] summary::before{content:"▼ "}
+.ab{margin-top:9px;padding-top:9px;border-top:1px solid rgba(255,255,255,0.04);font-size:12px}
+.al{color:#00e676;font-size:8px;letter-spacing:.1em;margin-bottom:4px;font-family:'Courier New',monospace}
+.as{margin-bottom:9px} .as p{color:#888;line-height:1.6;font-family:Georgia,serif}
+.ac{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px}
+.ac ul{padding-left:13px;color:#777;line-height:1.7;font-family:Georgia,serif}
+.ae{padding:7px 11px;border-radius:4px;border:1px solid;margin-bottom:9px}
+.ar{background:rgba(255,255,255,0.02);border-radius:4px;padding:7px 11px;border:1px solid rgba(255,255,255,0.05)}
+.rr{display:flex;justify-content:space-between;padding:2px 0;font-size:11px;color:#444}
+.hint{margin-top:16px;background:rgba(0,230,118,0.02);border:1px solid rgba(0,230,118,0.08);border-radius:6px;padding:12px 16px}
+.hint-t{color:#00e676;font-size:8px;letter-spacing:.12em;margin-bottom:5px}
+.hint p{color:#2a2a2a;font-size:11px;line-height:1.7;font-family:Georgia,serif}
+.leg{margin-top:16px;padding:10px 14px;border:1px solid rgba(255,255,255,0.03);border-radius:5px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.disc{margin-top:11px;color:#161616;font-size:8px;line-height:1.6}
+</style></head><body>
+<div class="hdr"><div class="hr">
+  <div><div class="brand">WORTMANN &amp; WEMBER GMBH</div>
+    <h1>SWING TRADE SCREENER</h1>
+    <div class="sub">Live-Daten · Yahoo Finance · Long &amp; Short · 12 Instrumente</div>
+  </div>
+  <div class="di">Erstellt: 30.04.2026 09:06<br>Yahoo Finance (~15 Min. Verzögerung)</div>
+</div></div>
+<div class="tb"><span style="font-size:20px">🥇</span><div><div style="color:#00e676;font-size:8px;letter-spacing:.1em">STÄRKSTES SIGNAL</div><div style="color:#e0e0e0;font-size:14px;font-weight:bold">Gold (GOLD) <span style="color:#00e676">▲ LONG</span> — 95%</div></div><a href="#c-GOLD" style="margin-left:auto;color:#00e676;font-size:10px;text-decoration:none;border:1px solid #00e67644;padding:4px 12px;border-radius:3px">↓ DETAIL</a></div>
+<div class="fi">
+  <div class="ft">SIGNAL-FILTEREBENEN (LONG &amp; SHORT)</div>
+  <div class="ftags">
+    <span class="ftag">① EMA200 Regime (Bull/Bear)</span><span class="ftag">② EMA50 Pullback</span><span class="ftag">③ RSI Zone</span><span class="ftag">④ BB-Kompression</span><span class="ftag">⑤ Volumen</span><span class="ftag">⑥ Kerzenmuster</span><span class="ftag">⑦ Saisonalität (Bonus)</span>
+  </div>
+  <div style="margin-top:10px"><span style="color:#4fc3f7;font-size:9px;margin-right:12px">■ Index</span><span style="color:#ffb74d;font-size:9px;margin-right:12px">■ Rohstoff</span><span style="color:#ce93d8;font-size:9px;margin-right:12px">■ Krypto</span></div>
+</div>
+<div class="grid"><div class="card" id="c-GOLD">
+          <div class="ch">
+            <div class="ct"><span style="font-size:16px">🥇</span>
+              <div><div class="sym">GOLD</div>
+                <div class="nm">Gold <span style="color:#ffb74d;font-size:8px">Rohstoff</span></div>
+                <div class="pr">4.629</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="rb" style="color:#00e676;background:rgba(0,230,118,0.10);border-color:#00e67644">STARK</div>
+              <div class="dir-badge" style="color:#00e676;background:rgba(0,230,118,0.10);border-color:#00e67644">▲ LONG</div>
+            </div>
+          </div>
+          <div class="sw"><div class="st"><div class="sf" style="width:95%;background:#00e676"></div></div>
+            <div class="sr"><span style="color:#2a2a2a;font-size:9px">SCORE</span>
+            <span style="color:#00e676;font-size:13px;font-weight:bold">95%</span></div></div>
+          <div class="sc-row">
+              <span style="color:#00e676">▲ LONG 95%</span>
+              <span style="color:#444">vs</span>
+              <span style="color:#f44336">▼ SHORT 50%</span>
+            </div>
+          <div class="badges"><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA200</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA50</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● RSI</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● BB</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● VOL</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● KERZE</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ SAISON</span></div>
+          <div class="mg"><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KURS</div><div class="mv" style="color:#00e676">4.629</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">RSI(14)</div><div class="mv" style="color:#00e676">44.4</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA50 DIST</div><div class="mv" style="color:#00e676">-2.49%</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA200</div><div class="mv" style="color:#00e676">BULL ✓</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">BB-BREITE</div><div class="mv" style="color:#00e676">28. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">ATR</div><div class="mv" style="color:#444">65. Pz.</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">VOL RATIO</div><div class="mv" style="color:#00e676">48.88x</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KERZE</div><div class="mv" style="color:#00e676">Bullish Marubozu</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">SAISON</div><div class="mv" style="color:#444">60%</div></div></div>
+          <div class="lv-panel">
+              <div class="lv-title">HANDELSNIVEAUS</div>
+              <div class="lv-grid">
+                <div class="lv-row">
+                  <span class="lv-label">Einstieg</span>
+                  <span class="lv-val" style="color:#e0e0e0">4.629</span>
+                  <span class="lv-pct"></span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Stop-Loss</span>
+                  <span class="lv-val" style="color:#f44336">4.537</span>
+                  <span class="lv-pct" style="color:#f44336">-2.0%</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 1</span>
+                  <span class="lv-val" style="color:#00e676">4.767</span>
+                  <span class="lv-pct" style="color:#00e676">+3.0% · CRV 1.5:1</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 2</span>
+                  <span class="lv-val" style="color:#00b060">4.859</span>
+                  <span class="lv-pct" style="color:#00b060">+5.0% · CRV 2.5:1</span>
+                </div>
+                <div class="lv-row lv-pos">
+                  <span class="lv-label">Positionsgröße ¹</span>
+                  <span class="lv-val" style="color:#ffd740">25.0%</span>
+                  <span class="lv-pct" style="color:#555">bei 1% Kapitalrisiko</span>
+                </div>
+              </div>
+            </div>
+          <details class="ad"><summary>Analyse einblenden</summary><div class="ab">
+              <div class="as"><div class="al">SETUP-QUALITÄT</div><p>6/7 Signale aktiv. Trend und Timing zeigen in dieselbe Richtung.</p></div>
+              <div class="ac"><div><div class="al">STÄRKEN</div><ul><li>Kurs über EMA200 – intakter Aufwärtstrend</li><li>EMA50-Pullback (-2.5%) – ideale Einstiegszone</li><li>RSI 44 – neutrale Zone, kein Extremwert</li></ul></div>
+              <div><div class="al">RISIKEN</div><ul></ul></div></div>
+              <div class="ae" style="border-color:#00e67644;background:#00e67608">
+                <strong style="color:#00e676">EINSTEIGEN</strong>
+                <span style="color:#777;font-size:11px"> — Signale bestätigen sich – hohes Setup-Vertrauen.</span></div>
+              <div class="ar"><div class="al">RISIKOMANAGEMENT</div>
+                <div class="rr"><span>Stop-Loss:</span><span style="color:#ff9100">Unter EMA50 (4747) / -2.5%</span></div>
+                <div class="rr"><span>Ziel 1:</span><span style="color:#00e676">+6.2% vom Einstieg</span></div>
+                <div class="rr"><span>CRV:</span><span style="color:#ffd740">2.5:1</span></div>
+              </div></div></details>
+        </div><div class="card" id="c-SILBER">
+          <div class="ch">
+            <div class="ct"><span style="font-size:16px">🪙</span>
+              <div><div class="sym">SILBER</div>
+                <div class="nm">Silber <span style="color:#ffb74d;font-size:8px">Rohstoff</span></div>
+                <div class="pr">73.82</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="rb" style="color:#00e676;background:rgba(0,230,118,0.10);border-color:#00e67644">STARK</div>
+              <div class="dir-badge" style="color:#00e676;background:rgba(0,230,118,0.10);border-color:#00e67644">▲ LONG</div>
+            </div>
+          </div>
+          <div class="sw"><div class="st"><div class="sf" style="width:86%;background:#00e676"></div></div>
+            <div class="sr"><span style="color:#2a2a2a;font-size:9px">SCORE</span>
+            <span style="color:#00e676;font-size:13px;font-weight:bold">86%</span></div></div>
+          <div class="sc-row">
+              <span style="color:#00e676">▲ LONG 86%</span>
+              <span style="color:#444">vs</span>
+              <span style="color:#f44336">▼ SHORT 50%</span>
+            </div>
+          <div class="badges"><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA200</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ EMA50</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● RSI</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● BB</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● VOL</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● KERZE</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ SAISON</span></div>
+          <div class="mg"><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KURS</div><div class="mv" style="color:#00e676">73.82</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">RSI(14)</div><div class="mv" style="color:#00e676">45.6</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">EMA50 DIST</div><div class="mv" style="color:#444">-3.88%</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA200</div><div class="mv" style="color:#00e676">BULL ✓</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">BB-BREITE</div><div class="mv" style="color:#00e676">36. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">ATR</div><div class="mv" style="color:#444">65. Pz.</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">VOL RATIO</div><div class="mv" style="color:#00e676">3.30x</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KERZE</div><div class="mv" style="color:#00e676">Bullish Marubozu</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">SAISON</div><div class="mv" style="color:#444">58%</div></div></div>
+          <div class="lv-panel">
+              <div class="lv-title">HANDELSNIVEAUS</div>
+              <div class="lv-grid">
+                <div class="lv-row">
+                  <span class="lv-label">Einstieg</span>
+                  <span class="lv-val" style="color:#e0e0e0">73.82</span>
+                  <span class="lv-pct"></span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Stop-Loss</span>
+                  <span class="lv-val" style="color:#f44336">71.52</span>
+                  <span class="lv-pct" style="color:#f44336">-3.1%</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 1</span>
+                  <span class="lv-val" style="color:#00e676">77.25</span>
+                  <span class="lv-pct" style="color:#00e676">+4.7% · CRV 1.5:1</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 2</span>
+                  <span class="lv-val" style="color:#00b060">79.55</span>
+                  <span class="lv-pct" style="color:#00b060">+7.8% · CRV 2.5:1</span>
+                </div>
+                <div class="lv-row lv-pos">
+                  <span class="lv-label">Positionsgröße ¹</span>
+                  <span class="lv-val" style="color:#ffd740">25.0%</span>
+                  <span class="lv-pct" style="color:#555">bei 1% Kapitalrisiko</span>
+                </div>
+              </div>
+            </div>
+          <details class="ad"><summary>Analyse einblenden</summary><div class="ab">
+              <div class="as"><div class="al">SETUP-QUALITÄT</div><p>5/7 Signale aktiv. Trend und Timing zeigen in dieselbe Richtung.</p></div>
+              <div class="ac"><div><div class="al">STÄRKEN</div><ul><li>Kurs über EMA200 – intakter Aufwärtstrend</li><li>RSI 46 – neutrale Zone, kein Extremwert</li><li>BB komprimiert (36. Pz.) – Ausbruch vorbereitet</li></ul></div>
+              <div><div class="al">RISIKEN</div><ul></ul></div></div>
+              <div class="ae" style="border-color:#00e67644;background:#00e67608">
+                <strong style="color:#00e676">EINSTEIGEN</strong>
+                <span style="color:#777;font-size:11px"> — Signale bestätigen sich – hohes Setup-Vertrauen.</span></div>
+              <div class="ar"><div class="al">RISIKOMANAGEMENT</div>
+                <div class="rr"><span>Stop-Loss:</span><span style="color:#ff9100">Unter EMA50 (77) / -2.5%</span></div>
+                <div class="rr"><span>Ziel 1:</span><span style="color:#00e676">+6.2% vom Einstieg</span></div>
+                <div class="rr"><span>CRV:</span><span style="color:#ffd740">2.5:1</span></div>
+              </div></div></details>
+        </div><div class="card" id="c-SX5E">
+          <div class="ch">
+            <div class="ct"><span style="font-size:16px">🇪🇺</span>
+              <div><div class="sym">SX5E</div>
+                <div class="nm">Euro Stoxx 50 <span style="color:#4fc3f7;font-size:8px">Index</span></div>
+                <div class="pr">5.775</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="rb" style="color:#ffd740;background:rgba(255,215,64,0.10);border-color:#ffd74044">MODERAT</div>
+              <div class="dir-badge" style="color:#00e676;background:rgba(0,230,118,0.10);border-color:#00e67644">▲ LONG</div>
+            </div>
+          </div>
+          <div class="sw"><div class="st"><div class="sf" style="width:68%;background:#ffd740"></div></div>
+            <div class="sr"><span style="color:#2a2a2a;font-size:9px">SCORE</span>
+            <span style="color:#ffd740;font-size:13px;font-weight:bold">68%</span></div></div>
+          <div class="sc-row">
+              <span style="color:#00e676">▲ LONG 68%</span>
+              <span style="color:#444">vs</span>
+              <span style="color:#f44336">▼ SHORT 36%</span>
+            </div>
+          <div class="badges"><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA200</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA50</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● RSI</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ BB</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ VOL</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ KERZE</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● SAISON</span></div>
+          <div class="mg"><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KURS</div><div class="mv" style="color:#00e676">5.775</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">RSI(14)</div><div class="mv" style="color:#00e676">44.7</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA50 DIST</div><div class="mv" style="color:#00e676">-1.06%</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA200</div><div class="mv" style="color:#00e676">BULL ✓</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">BB-BREITE</div><div class="mv" style="color:#444">79. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">ATR</div><div class="mv" style="color:#444">74. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">VOL RATIO</div><div class="mv" style="color:#444">N/A</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">KERZE</div><div class="mv" style="color:#444">Bearish Bar</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">SAISON</div><div class="mv" style="color:#00e676">69%</div></div></div>
+          <div class="lv-panel">
+              <div class="lv-title">HANDELSNIVEAUS</div>
+              <div class="lv-grid">
+                <div class="lv-row">
+                  <span class="lv-label">Einstieg</span>
+                  <span class="lv-val" style="color:#e0e0e0">5.775</span>
+                  <span class="lv-pct"></span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Stop-Loss</span>
+                  <span class="lv-val" style="color:#f44336">5.660</span>
+                  <span class="lv-pct" style="color:#f44336">-2.0%</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 1</span>
+                  <span class="lv-val" style="color:#00e676">5.949</span>
+                  <span class="lv-pct" style="color:#00e676">+3.0% · CRV 1.5:1</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 2</span>
+                  <span class="lv-val" style="color:#00b060">6.006</span>
+                  <span class="lv-pct" style="color:#00b060">+4.0% · CRV 2.0:1</span>
+                </div>
+                <div class="lv-row lv-pos">
+                  <span class="lv-label">Positionsgröße ¹</span>
+                  <span class="lv-val" style="color:#ffd740">25.0%</span>
+                  <span class="lv-pct" style="color:#555">bei 1% Kapitalrisiko</span>
+                </div>
+              </div>
+            </div>
+          <details class="ad"><summary>Analyse einblenden</summary><div class="ab">
+              <div class="as"><div class="al">SETUP-QUALITÄT</div><p>4/7 Signale aktiv. Potenzial vorhanden, nicht alle Bedingungen erfüllt.</p></div>
+              <div class="ac"><div><div class="al">STÄRKEN</div><ul><li>Kurs über EMA200 – intakter Aufwärtstrend</li><li>EMA50-Pullback (-1.1%) – ideale Einstiegszone</li><li>RSI 45 – neutrale Zone, kein Extremwert</li></ul></div>
+              <div><div class="al">RISIKEN</div><ul><li>BB ausgedehnt (79. Pz.) – Bewegung läuft bereits</li><li>Kein bullishes Muster (Bearish Bar)</li></ul></div></div>
+              <div class="ae" style="border-color:#ffd74044;background:#ffd74008">
+                <strong style="color:#ffd740">BEOBACHTEN</strong>
+                <span style="color:#777;font-size:11px"> — Solides Setup, auf finale Bestätigung warten.</span></div>
+              <div class="ar"><div class="al">RISIKOMANAGEMENT</div>
+                <div class="rr"><span>Stop-Loss:</span><span style="color:#ff9100">Unter EMA50 (5837) / -2.5%</span></div>
+                <div class="rr"><span>Ziel 1:</span><span style="color:#00e676">+5.0% vom Einstieg</span></div>
+                <div class="rr"><span>CRV:</span><span style="color:#ffd740">2.0:1</span></div>
+              </div></div></details>
+        </div><div class="card" id="c-KUPFER">
+          <div class="ch">
+            <div class="ct"><span style="font-size:16px">🔶</span>
+              <div><div class="sym">KUPFER</div>
+                <div class="nm">Kupfer <span style="color:#ffb74d;font-size:8px">Rohstoff</span></div>
+                <div class="pr">5.99</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="rb" style="color:#ffd740;background:rgba(255,215,64,0.10);border-color:#ffd74044">MODERAT</div>
+              <div class="dir-badge" style="color:#00e676;background:rgba(0,230,118,0.10);border-color:#00e67644">▲ LONG</div>
+            </div>
+          </div>
+          <div class="sw"><div class="st"><div class="sf" style="width:64%;background:#ffd740"></div></div>
+            <div class="sr"><span style="color:#2a2a2a;font-size:9px">SCORE</span>
+            <span style="color:#ffd740;font-size:13px;font-weight:bold">64%</span></div></div>
+          <div class="sc-row">
+              <span style="color:#00e676">▲ LONG 64%</span>
+              <span style="color:#444">vs</span>
+              <span style="color:#f44336">▼ SHORT 27%</span>
+            </div>
+          <div class="badges"><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA200</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ EMA50</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ RSI</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ BB</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● VOL</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● KERZE</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ SAISON</span></div>
+          <div class="mg"><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KURS</div><div class="mv" style="color:#00e676">5.99</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">RSI(14)</div><div class="mv" style="color:#444">55.8</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">EMA50 DIST</div><div class="mv" style="color:#444">+2.89%</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA200</div><div class="mv" style="color:#00e676">BULL ✓</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">BB-BREITE</div><div class="mv" style="color:#444">66. Pz.</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">ATR</div><div class="mv" style="color:#00e676">30. Pz.</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">VOL RATIO</div><div class="mv" style="color:#00e676">2.79x</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KERZE</div><div class="mv" style="color:#00e676">Bullish Marubozu</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">SAISON</div><div class="mv" style="color:#444">63%</div></div></div>
+          <div class="lv-panel">
+              <div class="lv-title">HANDELSNIVEAUS</div>
+              <div class="lv-grid">
+                <div class="lv-row">
+                  <span class="lv-label">Einstieg</span>
+                  <span class="lv-val" style="color:#e0e0e0">5.99</span>
+                  <span class="lv-pct"></span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Stop-Loss</span>
+                  <span class="lv-val" style="color:#f44336">5.79</span>
+                  <span class="lv-pct" style="color:#f44336">-2.3%</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 1</span>
+                  <span class="lv-val" style="color:#00e676">6.15</span>
+                  <span class="lv-pct" style="color:#00e676">+2.8% · CRV 1.2:1</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 2</span>
+                  <span class="lv-val" style="color:#00b060">6.24</span>
+                  <span class="lv-pct" style="color:#00b060">+4.2% · CRV 1.8:1</span>
+                </div>
+                <div class="lv-row lv-pos">
+                  <span class="lv-label">Positionsgröße ¹</span>
+                  <span class="lv-val" style="color:#ffd740">25.0%</span>
+                  <span class="lv-pct" style="color:#555">bei 1% Kapitalrisiko</span>
+                </div>
+              </div>
+            </div>
+          <details class="ad"><summary>Analyse einblenden</summary><div class="ab">
+              <div class="as"><div class="al">SETUP-QUALITÄT</div><p>3/7 Signale aktiv. Potenzial vorhanden, nicht alle Bedingungen erfüllt.</p></div>
+              <div class="ac"><div><div class="al">STÄRKEN</div><ul><li>Kurs über EMA200 – intakter Aufwärtstrend</li><li>Volumen 2.8x – Bestätigung vorhanden</li><li>Bullishes Muster (Bullish Marubozu)</li></ul></div>
+              <div><div class="al">RISIKEN</div><ul><li>BB ausgedehnt (66. Pz.) – Bewegung läuft bereits</li></ul></div></div>
+              <div class="ae" style="border-color:#ff910044;background:#ff910008">
+                <strong style="color:#ff9100">WARTEN</strong>
+                <span style="color:#777;font-size:11px"> — Einzelne Signale vorhanden, Bild uneinheitlich.</span></div>
+              <div class="ar"><div class="al">RISIKOMANAGEMENT</div>
+                <div class="rr"><span>Stop-Loss:</span><span style="color:#ff9100">Unter EMA50 (6) / -1.5%</span></div>
+                <div class="rr"><span>Ziel 1:</span><span style="color:#00e676">+3.0% vom Einstieg</span></div>
+                <div class="rr"><span>CRV:</span><span style="color:#ffd740">2.0:1</span></div>
+              </div></div></details>
+        </div><div class="card" id="c-SPX">
+          <div class="ch">
+            <div class="ct"><span style="font-size:16px">📈</span>
+              <div><div class="sym">SPX</div>
+                <div class="nm">S&P 500 <span style="color:#4fc3f7;font-size:8px">Index</span></div>
+                <div class="pr">7.136</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="rb" style="color:#ff9100;background:rgba(255,145,0,0.10);border-color:#ff910044">SCHWACH</div>
+              <div class="dir-badge" style="color:#00e676;background:rgba(0,230,118,0.10);border-color:#00e67644">▲ LONG</div>
+            </div>
+          </div>
+          <div class="sw"><div class="st"><div class="sf" style="width:59%;background:#ff9100"></div></div>
+            <div class="sr"><span style="color:#2a2a2a;font-size:9px">SCORE</span>
+            <span style="color:#ff9100;font-size:13px;font-weight:bold">59%</span></div></div>
+          <div class="sc-row">
+              <span style="color:#00e676">▲ LONG 59%</span>
+              <span style="color:#444">vs</span>
+              <span style="color:#f44336">▼ SHORT 18%</span>
+            </div>
+          <div class="badges"><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA200</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ EMA50</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ RSI</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ BB</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● VOL</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● KERZE</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● SAISON</span></div>
+          <div class="mg"><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KURS</div><div class="mv" style="color:#00e676">7.136</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">RSI(14)</div><div class="mv" style="color:#444">66.6</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">EMA50 DIST</div><div class="mv" style="color:#444">+3.86%</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA200</div><div class="mv" style="color:#00e676">BULL ✓</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">BB-BREITE</div><div class="mv" style="color:#444">96. Pz.</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">ATR</div><div class="mv" style="color:#00e676">50. Pz.</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">VOL RATIO</div><div class="mv" style="color:#00e676">1.01x</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KERZE</div><div class="mv" style="color:#00e676">Bullish Bar</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">SAISON</div><div class="mv" style="color:#00e676">72%</div></div></div>
+          <div class="lv-panel">
+              <div class="lv-title">HANDELSNIVEAUS</div>
+              <div class="lv-grid">
+                <div class="lv-row">
+                  <span class="lv-label">Einstieg</span>
+                  <span class="lv-val" style="color:#e0e0e0">7.136</span>
+                  <span class="lv-pct"></span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Stop-Loss</span>
+                  <span class="lv-val" style="color:#f44336">6.837</span>
+                  <span class="lv-pct" style="color:#f44336">-3.1%</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 1</span>
+                  <span class="lv-val" style="color:#00e676">7.400</span>
+                  <span class="lv-pct" style="color:#00e676">+3.7% · CRV 1.2:1</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 2</span>
+                  <span class="lv-val" style="color:#00b060">7.532</span>
+                  <span class="lv-pct" style="color:#00b060">+5.5% · CRV 1.8:1</span>
+                </div>
+                <div class="lv-row lv-pos">
+                  <span class="lv-label">Positionsgröße ¹</span>
+                  <span class="lv-val" style="color:#ffd740">23.8%</span>
+                  <span class="lv-pct" style="color:#555">bei 1% Kapitalrisiko</span>
+                </div>
+              </div>
+            </div>
+          <details class="ad"><summary>Analyse einblenden</summary><div class="ab">
+              <div class="as"><div class="al">SETUP-QUALITÄT</div><p>4/7 Signale aktiv. Potenzial vorhanden, nicht alle Bedingungen erfüllt.</p></div>
+              <div class="ac"><div><div class="al">STÄRKEN</div><ul><li>Kurs über EMA200 – intakter Aufwärtstrend</li><li>Volumen 1.0x – Bestätigung vorhanden</li><li>Bullishes Muster (Bullish Bar)</li></ul></div>
+              <div><div class="al">RISIKEN</div><ul><li>BB ausgedehnt (96. Pz.) – Bewegung läuft bereits</li></ul></div></div>
+              <div class="ae" style="border-color:#ff910044;background:#ff910008">
+                <strong style="color:#ff9100">WARTEN</strong>
+                <span style="color:#777;font-size:11px"> — Einzelne Signale vorhanden, Bild uneinheitlich.</span></div>
+              <div class="ar"><div class="al">RISIKOMANAGEMENT</div>
+                <div class="rr"><span>Stop-Loss:</span><span style="color:#ff9100">Unter EMA50 (6871) / -2.5%</span></div>
+                <div class="rr"><span>Ziel 1:</span><span style="color:#00e676">+3.8% vom Einstieg</span></div>
+                <div class="rr"><span>CRV:</span><span style="color:#ffd740">1.5:1</span></div>
+              </div></div></details>
+        </div><div class="card" id="c-DJI">
+          <div class="ch">
+            <div class="ct"><span style="font-size:16px">🏛️</span>
+              <div><div class="sym">DJI</div>
+                <div class="nm">Dow Jones <span style="color:#4fc3f7;font-size:8px">Index</span></div>
+                <div class="pr">48.862</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="rb" style="color:#ff9100;background:rgba(255,145,0,0.10);border-color:#ff910044">SCHWACH</div>
+              <div class="dir-badge" style="color:#00e676;background:rgba(0,230,118,0.10);border-color:#00e67644">▲ LONG</div>
+            </div>
+          </div>
+          <div class="sw"><div class="st"><div class="sf" style="width:59%;background:#ff9100"></div></div>
+            <div class="sr"><span style="color:#2a2a2a;font-size:9px">SCORE</span>
+            <span style="color:#ff9100;font-size:13px;font-weight:bold">59%</span></div></div>
+          <div class="sc-row">
+              <span style="color:#00e676">▲ LONG 59%</span>
+              <span style="color:#444">vs</span>
+              <span style="color:#f44336">▼ SHORT 36%</span>
+            </div>
+          <div class="badges"><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA200</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA50</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ RSI</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ BB</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ VOL</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ KERZE</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● SAISON</span></div>
+          <div class="mg"><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KURS</div><div class="mv" style="color:#00e676">48.862</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">RSI(14)</div><div class="mv" style="color:#444">57.5</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA50 DIST</div><div class="mv" style="color:#00e676">+1.52%</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA200</div><div class="mv" style="color:#00e676">BULL ✓</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">BB-BREITE</div><div class="mv" style="color:#444">90. Pz.</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">ATR</div><div class="mv" style="color:#00e676">53. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">VOL RATIO</div><div class="mv" style="color:#444">0.92x</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">KERZE</div><div class="mv" style="color:#444">Bearish Bar</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">SAISON</div><div class="mv" style="color:#00e676">71%</div></div></div>
+          <div class="lv-panel">
+              <div class="lv-title">HANDELSNIVEAUS</div>
+              <div class="lv-grid">
+                <div class="lv-row">
+                  <span class="lv-label">Einstieg</span>
+                  <span class="lv-val" style="color:#e0e0e0">48.862</span>
+                  <span class="lv-pct"></span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Stop-Loss</span>
+                  <span class="lv-val" style="color:#f44336">47.891</span>
+                  <span class="lv-pct" style="color:#f44336">-1.6%</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 1</span>
+                  <span class="lv-val" style="color:#00e676">49.800</span>
+                  <span class="lv-pct" style="color:#00e676">+1.9% · CRV 1.2:1</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 2</span>
+                  <span class="lv-val" style="color:#00b060">50.269</span>
+                  <span class="lv-pct" style="color:#00b060">+2.9% · CRV 1.8:1</span>
+                </div>
+                <div class="lv-row lv-pos">
+                  <span class="lv-label">Positionsgröße ¹</span>
+                  <span class="lv-val" style="color:#ffd740">25.0%</span>
+                  <span class="lv-pct" style="color:#555">bei 1% Kapitalrisiko</span>
+                </div>
+              </div>
+            </div>
+          <details class="ad"><summary>Analyse einblenden</summary><div class="ab">
+              <div class="as"><div class="al">SETUP-QUALITÄT</div><p>3/7 Signale aktiv. Potenzial vorhanden, nicht alle Bedingungen erfüllt.</p></div>
+              <div class="ac"><div><div class="al">STÄRKEN</div><ul><li>Kurs über EMA200 – intakter Aufwärtstrend</li><li>EMA50-Pullback (+1.5%) – ideale Einstiegszone</li><li>Saisonal 71% bullish – Rückenwind</li></ul></div>
+              <div><div class="al">RISIKEN</div><ul><li>BB ausgedehnt (90. Pz.) – Bewegung läuft bereits</li><li>Kein bullishes Muster (Bearish Bar)</li></ul></div></div>
+              <div class="ae" style="border-color:#ff910044;background:#ff910008">
+                <strong style="color:#ff9100">WARTEN</strong>
+                <span style="color:#777;font-size:11px"> — Einzelne Signale vorhanden, Bild uneinheitlich.</span></div>
+              <div class="ar"><div class="al">RISIKOMANAGEMENT</div>
+                <div class="rr"><span>Stop-Loss:</span><span style="color:#ff9100">Unter EMA50 (48131) / -2.5%</span></div>
+                <div class="rr"><span>Ziel 1:</span><span style="color:#00e676">+3.8% vom Einstieg</span></div>
+                <div class="rr"><span>CRV:</span><span style="color:#ffd740">1.5:1</span></div>
+              </div></div></details>
+        </div><div class="card" id="c-DAX">
+          <div class="ch">
+            <div class="ct"><span style="font-size:16px">🇩🇪</span>
+              <div><div class="sym">DAX</div>
+                <div class="nm">DAX 40 <span style="color:#4fc3f7;font-size:8px">Index</span></div>
+                <div class="pr">23.896</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="rb" style="color:#ff9100;background:rgba(255,145,0,0.10);border-color:#ff910044">SCHWACH</div>
+              <div class="dir-badge" style="color:#f44336;background:rgba(244,67,54,0.10);border-color:#f4433644">▼ SHORT</div>
+            </div>
+          </div>
+          <div class="sw"><div class="st"><div class="sf" style="width:59%;background:#ff9100"></div></div>
+            <div class="sr"><span style="color:#2a2a2a;font-size:9px">SCORE</span>
+            <span style="color:#ff9100;font-size:13px;font-weight:bold">59%</span></div></div>
+          <div class="sc-row">
+              <span style="color:#00e676">▲ LONG 55%</span>
+              <span style="color:#444">vs</span>
+              <span style="color:#f44336">▼ SHORT 59%</span>
+            </div>
+          <div class="badges"><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA200↓</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA50↓</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● RSI↑</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ BB</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ VOL</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ KERZE↓</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ SAISON↓</span></div>
+          <div class="mg"><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KURS</div><div class="mv" style="color:#00e676">23.896</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">RSI(14)</div><div class="mv" style="color:#00e676">50.2</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA50 DIST</div><div class="mv" style="color:#00e676">-0.10%</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA200</div><div class="mv" style="color:#00e676">BEAR ✗</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">BB-BREITE</div><div class="mv" style="color:#444">79. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">ATR</div><div class="mv" style="color:#444">62. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">VOL RATIO</div><div class="mv" style="color:#444">N/A</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">KERZE</div><div class="mv" style="color:#444">Bullish Marubozu</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">SAISON</div><div class="mv" style="color:#444">70%</div></div></div>
+          <div class="lv-panel">
+              <div class="lv-title">HANDELSNIVEAUS</div>
+              <div class="lv-grid">
+                <div class="lv-row">
+                  <span class="lv-label">Einstieg</span>
+                  <span class="lv-val" style="color:#e0e0e0">23.896</span>
+                  <span class="lv-pct"></span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▼ Stop-Loss</span>
+                  <span class="lv-val" style="color:#f44336">24.278</span>
+                  <span class="lv-pct" style="color:#f44336">-1.6%</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▼ Take Profit 1</span>
+                  <span class="lv-val" style="color:#00e676">23.437</span>
+                  <span class="lv-pct" style="color:#00e676">+1.9% · CRV 1.2:1</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▼ Take Profit 2</span>
+                  <span class="lv-val" style="color:#00b060">23.207</span>
+                  <span class="lv-pct" style="color:#00b060">+2.9% · CRV 1.8:1</span>
+                </div>
+                <div class="lv-row lv-pos">
+                  <span class="lv-label">Positionsgröße ¹</span>
+                  <span class="lv-val" style="color:#ffd740">25.0%</span>
+                  <span class="lv-pct" style="color:#555">bei 1% Kapitalrisiko</span>
+                </div>
+              </div>
+            </div>
+          <details class="ad"><summary>Analyse einblenden</summary><div class="ab">
+              <div class="as"><div class="al">SETUP-QUALITÄT</div><p>3/7 Signale aktiv. Potenzial vorhanden, nicht alle Bedingungen erfüllt.</p></div>
+              <div class="ac"><div><div class="al">STÄRKEN</div><ul><li>Kurs unter EMA200 – intakter Abwärtstrend</li><li>Kurs nahe EMA50 von oben (-0.1%) – Short-Pullback-Zone</li><li>RSI 50 – erhöhte Zone im Downtrend, Short-günstig</li></ul></div>
+              <div><div class="al">RISIKEN</div><ul><li>BB ausgedehnt (79. Pz.) – Bewegung läuft bereits</li><li>Kein bearisches Muster (Bullish Marubozu)</li><li>Saisonal 70% bullish – Gegenwind für Short</li></ul></div></div>
+              <div class="ae" style="border-color:#ff910044;background:#ff910008">
+                <strong style="color:#ff9100">WARTEN</strong>
+                <span style="color:#777;font-size:11px"> — Einzelne Signale vorhanden, Bild uneinheitlich.</span></div>
+              <div class="ar"><div class="al">RISIKOMANAGEMENT</div>
+                <div class="rr"><span>Stop-Loss:</span><span style="color:#ff9100">Über EMA50 (23921) / +2.5%</span></div>
+                <div class="rr"><span>Ziel 1:</span><span style="color:#00e676">-3.8% vom Einstieg</span></div>
+                <div class="rr"><span>CRV:</span><span style="color:#ffd740">1.5:1</span></div>
+              </div></div></details>
+        </div><div class="card" id="c-BRENT">
+          <div class="ch">
+            <div class="ct"><span style="font-size:16px">⛽</span>
+              <div><div class="sym">BRENT</div>
+                <div class="nm">Brent Rohöl <span style="color:#ffb74d;font-size:8px">Rohstoff</span></div>
+                <div class="pr">104.29</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="rb" style="color:#ff9100;background:rgba(255,145,0,0.10);border-color:#ff910044">SCHWACH</div>
+              <div class="dir-badge" style="color:#00e676;background:rgba(0,230,118,0.10);border-color:#00e67644">▲ LONG</div>
+            </div>
+          </div>
+          <div class="sw"><div class="st"><div class="sf" style="width:50%;background:#ff9100"></div></div>
+            <div class="sr"><span style="color:#2a2a2a;font-size:9px">SCORE</span>
+            <span style="color:#ff9100;font-size:13px;font-weight:bold">50%</span></div></div>
+          <div class="sc-row">
+              <span style="color:#00e676">▲ LONG 50%</span>
+              <span style="color:#444">vs</span>
+              <span style="color:#f44336">▼ SHORT 27%</span>
+            </div>
+          <div class="badges"><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA200</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ EMA50</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● RSI</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ BB</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ VOL</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ KERZE</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● SAISON</span></div>
+          <div class="mg"><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KURS</div><div class="mv" style="color:#00e676">104.29</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">RSI(14)</div><div class="mv" style="color:#00e676">51.9</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">EMA50 DIST</div><div class="mv" style="color:#444">+8.51%</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA200</div><div class="mv" style="color:#00e676">BULL ✓</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">BB-BREITE</div><div class="mv" style="color:#444">87. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">ATR</div><div class="mv" style="color:#444">85. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">VOL RATIO</div><div class="mv" style="color:#444">0.35x</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">KERZE</div><div class="mv" style="color:#444">Bearish Bar</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">SAISON</div><div class="mv" style="color:#00e676">67%</div></div></div>
+          <div class="lv-panel">
+              <div class="lv-title">HANDELSNIVEAUS</div>
+              <div class="lv-grid">
+                <div class="lv-row">
+                  <span class="lv-label">Einstieg</span>
+                  <span class="lv-val" style="color:#e0e0e0">104.29</span>
+                  <span class="lv-pct"></span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Stop-Loss</span>
+                  <span class="lv-val" style="color:#f44336">95.63</span>
+                  <span class="lv-pct" style="color:#f44336">-5.0%</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 1</span>
+                  <span class="lv-val" style="color:#00e676">110.55</span>
+                  <span class="lv-pct" style="color:#00e676">+6.0% · CRV 1.2:1</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 2</span>
+                  <span class="lv-val" style="color:#00b060">113.68</span>
+                  <span class="lv-pct" style="color:#00b060">+9.0% · CRV 1.8:1</span>
+                </div>
+                <div class="lv-row lv-pos">
+                  <span class="lv-label">Positionsgröße ¹</span>
+                  <span class="lv-val" style="color:#ffd740">12.0%</span>
+                  <span class="lv-pct" style="color:#555">bei 1% Kapitalrisiko</span>
+                </div>
+              </div>
+            </div>
+          <details class="ad"><summary>Analyse einblenden</summary><div class="ab">
+              <div class="as"><div class="al">SETUP-QUALITÄT</div><p>Nur 3/7 Signale aktiv. Kein klares Setup erkennbar.</p></div>
+              <div class="ac"><div><div class="al">STÄRKEN</div><ul><li>Kurs über EMA200 – intakter Aufwärtstrend</li><li>RSI 52 – neutrale Zone, kein Extremwert</li><li>Saisonal 67% bullish – Rückenwind</li></ul></div>
+              <div><div class="al">RISIKEN</div><ul><li>Kurs 8.5% über EMA50 – zu weit ausgedehnt</li><li>BB ausgedehnt (87. Pz.) – Bewegung läuft bereits</li><li>Volumen 0.4x – schwache Überzeugung</li></ul></div></div>
+              <div class="ae" style="border-color:#ff910044;background:#ff910008">
+                <strong style="color:#ff9100">WARTEN</strong>
+                <span style="color:#777;font-size:11px"> — Einzelne Signale vorhanden, Bild uneinheitlich.</span></div>
+              <div class="ar"><div class="al">RISIKOMANAGEMENT</div>
+                <div class="rr"><span>Stop-Loss:</span><span style="color:#ff9100">Unter EMA50 (96) / -2.5%</span></div>
+                <div class="rr"><span>Ziel 1:</span><span style="color:#00e676">+3.8% vom Einstieg</span></div>
+                <div class="rr"><span>CRV:</span><span style="color:#ffd740">1.5:1</span></div>
+              </div></div></details>
+        </div><div class="card" id="c-BTC">
+          <div class="ch">
+            <div class="ct"><span style="font-size:16px">₿</span>
+              <div><div class="sym">BTC</div>
+                <div class="nm">Bitcoin <span style="color:#ce93d8;font-size:8px">Krypto</span></div>
+                <div class="pr">76.080</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="rb" style="color:#ff9100;background:rgba(255,145,0,0.10);border-color:#ff910044">SCHWACH</div>
+              <div class="dir-badge" style="color:#00e676;background:rgba(0,230,118,0.10);border-color:#00e67644">▲ LONG</div>
+            </div>
+          </div>
+          <div class="sw"><div class="st"><div class="sf" style="width:50%;background:#ff9100"></div></div>
+            <div class="sr"><span style="color:#2a2a2a;font-size:9px">SCORE</span>
+            <span style="color:#ff9100;font-size:13px;font-weight:bold">50%</span></div></div>
+          <div class="sc-row">
+              <span style="color:#00e676">▲ LONG 50%</span>
+              <span style="color:#444">vs</span>
+              <span style="color:#f44336">▼ SHORT 50%</span>
+            </div>
+          <div class="badges"><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ EMA200</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ EMA50</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● RSI</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ BB</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● VOL</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● KERZE</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ SAISON</span></div>
+          <div class="mg"><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KURS</div><div class="mv" style="color:#00e676">76.080</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">RSI(14)</div><div class="mv" style="color:#00e676">54.8</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">EMA50 DIST</div><div class="mv" style="color:#444">+3.29%</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">EMA200</div><div class="mv" style="color:#444">BEAR ✗</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">BB-BREITE</div><div class="mv" style="color:#444">41. Pz.</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">ATR</div><div class="mv" style="color:#00e676">8. Pz.</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">VOL RATIO</div><div class="mv" style="color:#00e676">1.07x</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KERZE</div><div class="mv" style="color:#00e676">Bullish Bar</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">SAISON</div><div class="mv" style="color:#444">60%</div></div></div>
+          <div class="lv-panel">
+              <div class="lv-title">HANDELSNIVEAUS</div>
+              <div class="lv-grid">
+                <div class="lv-row">
+                  <span class="lv-label">Einstieg</span>
+                  <span class="lv-val" style="color:#e0e0e0">76.080</span>
+                  <span class="lv-pct"></span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Stop-Loss</span>
+                  <span class="lv-val" style="color:#f44336">73.287</span>
+                  <span class="lv-pct" style="color:#f44336">-2.6%</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 1</span>
+                  <span class="lv-val" style="color:#00e676">78.484</span>
+                  <span class="lv-pct" style="color:#00e676">+3.2% · CRV 1.2:1</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 2</span>
+                  <span class="lv-val" style="color:#00b060">79.686</span>
+                  <span class="lv-pct" style="color:#00b060">+4.7% · CRV 1.8:1</span>
+                </div>
+                <div class="lv-row lv-pos">
+                  <span class="lv-label">Positionsgröße ¹</span>
+                  <span class="lv-val" style="color:#ffd740">25.0%</span>
+                  <span class="lv-pct" style="color:#555">bei 1% Kapitalrisiko</span>
+                </div>
+              </div>
+            </div>
+          <details class="ad"><summary>Analyse einblenden</summary><div class="ab">
+              <div class="as"><div class="al">SETUP-QUALITÄT</div><p>Nur 3/7 Signale aktiv. Kein klares Setup erkennbar.</p></div>
+              <div class="ac"><div><div class="al">STÄRKEN</div><ul><li>RSI 55 – neutrale Zone, kein Extremwert</li><li>Volumen 1.1x – Bestätigung vorhanden</li><li>Bullishes Muster (Bullish Bar)</li></ul></div>
+              <div><div class="al">RISIKEN</div><ul><li>Kurs unter EMA200 – kein Bull-Regime</li><li>BB ausgedehnt (41. Pz.) – Bewegung läuft bereits</li></ul></div></div>
+              <div class="ae" style="border-color:#ff910044;background:#ff910008">
+                <strong style="color:#ff9100">WARTEN</strong>
+                <span style="color:#777;font-size:11px"> — Einzelne Signale vorhanden, Bild uneinheitlich.</span></div>
+              <div class="ar"><div class="al">RISIKOMANAGEMENT</div>
+                <div class="rr"><span>Stop-Loss:</span><span style="color:#ff9100">Unter EMA50 (73655) / -1.5%</span></div>
+                <div class="rr"><span>Ziel 1:</span><span style="color:#00e676">+2.2% vom Einstieg</span></div>
+                <div class="rr"><span>CRV:</span><span style="color:#ffd740">1.5:1</span></div>
+              </div></div></details>
+        </div><div class="card" id="c-NQ">
+          <div class="ch">
+            <div class="ct"><span style="font-size:16px">💻</span>
+              <div><div class="sym">NQ</div>
+                <div class="nm">Nasdaq 100 <span style="color:#4fc3f7;font-size:8px">Index</span></div>
+                <div class="pr">27.187</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="rb" style="color:#ff9100;background:rgba(255,145,0,0.10);border-color:#ff910044">SCHWACH</div>
+              <div class="dir-badge" style="color:#00e676;background:rgba(0,230,118,0.10);border-color:#00e67644">▲ LONG</div>
+            </div>
+          </div>
+          <div class="sw"><div class="st"><div class="sf" style="width:41%;background:#ff9100"></div></div>
+            <div class="sr"><span style="color:#2a2a2a;font-size:9px">SCORE</span>
+            <span style="color:#ff9100;font-size:13px;font-weight:bold">41%</span></div></div>
+          <div class="sc-row">
+              <span style="color:#00e676">▲ LONG 41%</span>
+              <span style="color:#444">vs</span>
+              <span style="color:#f44336">▼ SHORT 0%</span>
+            </div>
+          <div class="badges"><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA200</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ EMA50</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ RSI</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ BB</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ VOL</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● KERZE</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● SAISON</span></div>
+          <div class="mg"><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KURS</div><div class="mv" style="color:#00e676">27.187</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">RSI(14)</div><div class="mv" style="color:#444">70.4</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">EMA50 DIST</div><div class="mv" style="color:#444">+6.81%</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA200</div><div class="mv" style="color:#00e676">BULL ✓</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">BB-BREITE</div><div class="mv" style="color:#444">97. Pz.</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">ATR</div><div class="mv" style="color:#00e676">58. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">VOL RATIO</div><div class="mv" style="color:#444">0.90x</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KERZE</div><div class="mv" style="color:#00e676">Bullish Bar</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">SAISON</div><div class="mv" style="color:#00e676">75%</div></div></div>
+          <div class="lv-panel">
+              <div class="lv-title">HANDELSNIVEAUS</div>
+              <div class="lv-grid">
+                <div class="lv-row">
+                  <span class="lv-label">Einstieg</span>
+                  <span class="lv-val" style="color:#e0e0e0">27.187</span>
+                  <span class="lv-pct"></span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Stop-Loss</span>
+                  <span class="lv-val" style="color:#f44336">25.327</span>
+                  <span class="lv-pct" style="color:#f44336">-5.0%</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 1</span>
+                  <span class="lv-val" style="color:#00e676">28.818</span>
+                  <span class="lv-pct" style="color:#00e676">+6.0% · CRV 1.2:1</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 2</span>
+                  <span class="lv-val" style="color:#00b060">29.634</span>
+                  <span class="lv-pct" style="color:#00b060">+9.0% · CRV 1.8:1</span>
+                </div>
+                <div class="lv-row lv-pos">
+                  <span class="lv-label">Positionsgröße ¹</span>
+                  <span class="lv-val" style="color:#ffd740">14.6%</span>
+                  <span class="lv-pct" style="color:#555">bei 1% Kapitalrisiko</span>
+                </div>
+              </div>
+            </div>
+          <details class="ad"><summary>Analyse einblenden</summary><div class="ab">
+              <div class="as"><div class="al">SETUP-QUALITÄT</div><p>Nur 3/7 Signale aktiv. Kein klares Setup erkennbar.</p></div>
+              <div class="ac"><div><div class="al">STÄRKEN</div><ul><li>Kurs über EMA200 – intakter Aufwärtstrend</li><li>Bullishes Muster (Bullish Bar)</li><li>Saisonal 75% bullish – Rückenwind</li></ul></div>
+              <div><div class="al">RISIKEN</div><ul><li>Kurs 6.8% über EMA50 – zu weit ausgedehnt</li><li>RSI 70 überkauft – Korrekturrisiko</li><li>BB ausgedehnt (97. Pz.) – Bewegung läuft bereits</li></ul></div></div>
+              <div class="ae" style="border-color:#f4433644;background:#f4433608">
+                <strong style="color:#f44336">MEIDEN</strong>
+                <span style="color:#777;font-size:11px"> — Zu viele Gegenindikationen.</span></div>
+              <div class="ar"><div class="al">RISIKOMANAGEMENT</div>
+                <div class="rr"><span>Stop-Loss:</span><span style="color:#ff9100">Unter EMA50 (25454) / -2.5%</span></div>
+                <div class="rr"><span>Ziel 1:</span><span style="color:#00e676">+3.8% vom Einstieg</span></div>
+                <div class="rr"><span>CRV:</span><span style="color:#ffd740">1.5:1</span></div>
+              </div></div></details>
+        </div><div class="card" id="c-NKY">
+          <div class="ch">
+            <div class="ct"><span style="font-size:16px">🗾</span>
+              <div><div class="sym">NKY</div>
+                <div class="nm">Nikkei 225 <span style="color:#4fc3f7;font-size:8px">Index</span></div>
+                <div class="pr">59.285</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="rb" style="color:#ff9100;background:rgba(255,145,0,0.10);border-color:#ff910044">SCHWACH</div>
+              <div class="dir-badge" style="color:#00e676;background:rgba(0,230,118,0.10);border-color:#00e67644">▲ LONG</div>
+            </div>
+          </div>
+          <div class="sw"><div class="st"><div class="sf" style="width:41%;background:#ff9100"></div></div>
+            <div class="sr"><span style="color:#2a2a2a;font-size:9px">SCORE</span>
+            <span style="color:#ff9100;font-size:13px;font-weight:bold">41%</span></div></div>
+          <div class="sc-row">
+              <span style="color:#00e676">▲ LONG 41%</span>
+              <span style="color:#444">vs</span>
+              <span style="color:#f44336">▼ SHORT 27%</span>
+            </div>
+          <div class="badges"><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA200</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ EMA50</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ RSI</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ BB</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ VOL</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ KERZE</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● SAISON</span></div>
+          <div class="mg"><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KURS</div><div class="mv" style="color:#00e676">59.285</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">RSI(14)</div><div class="mv" style="color:#444">59.7</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">EMA50 DIST</div><div class="mv" style="color:#444">+5.66%</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA200</div><div class="mv" style="color:#00e676">BULL ✓</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">BB-BREITE</div><div class="mv" style="color:#444">96. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">ATR</div><div class="mv" style="color:#444">71. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">VOL RATIO</div><div class="mv" style="color:#444">N/A</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">KERZE</div><div class="mv" style="color:#444">Bearish Bar</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">SAISON</div><div class="mv" style="color:#00e676">68%</div></div></div>
+          <div class="lv-panel">
+              <div class="lv-title">HANDELSNIVEAUS</div>
+              <div class="lv-grid">
+                <div class="lv-row">
+                  <span class="lv-label">Einstieg</span>
+                  <span class="lv-val" style="color:#e0e0e0">59.285</span>
+                  <span class="lv-pct"></span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Stop-Loss</span>
+                  <span class="lv-val" style="color:#f44336">55.828</span>
+                  <span class="lv-pct" style="color:#f44336">-4.5%</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 1</span>
+                  <span class="lv-val" style="color:#00e676">62.507</span>
+                  <span class="lv-pct" style="color:#00e676">+5.4% · CRV 1.2:1</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 2</span>
+                  <span class="lv-val" style="color:#00b060">64.117</span>
+                  <span class="lv-pct" style="color:#00b060">+8.2% · CRV 1.8:1</span>
+                </div>
+                <div class="lv-row lv-pos">
+                  <span class="lv-label">Positionsgröße ¹</span>
+                  <span class="lv-val" style="color:#ffd740">17.2%</span>
+                  <span class="lv-pct" style="color:#555">bei 1% Kapitalrisiko</span>
+                </div>
+              </div>
+            </div>
+          <details class="ad"><summary>Analyse einblenden</summary><div class="ab">
+              <div class="as"><div class="al">SETUP-QUALITÄT</div><p>Nur 2/7 Signale aktiv. Kein klares Setup erkennbar.</p></div>
+              <div class="ac"><div><div class="al">STÄRKEN</div><ul><li>Kurs über EMA200 – intakter Aufwärtstrend</li><li>Saisonal 68% bullish – Rückenwind</li></ul></div>
+              <div><div class="al">RISIKEN</div><ul><li>Kurs 5.7% über EMA50 – zu weit ausgedehnt</li><li>BB ausgedehnt (96. Pz.) – Bewegung läuft bereits</li><li>Kein bullishes Muster (Bearish Bar)</li></ul></div></div>
+              <div class="ae" style="border-color:#f4433644;background:#f4433608">
+                <strong style="color:#f44336">MEIDEN</strong>
+                <span style="color:#777;font-size:11px"> — Zu viele Gegenindikationen.</span></div>
+              <div class="ar"><div class="al">RISIKOMANAGEMENT</div>
+                <div class="rr"><span>Stop-Loss:</span><span style="color:#ff9100">Unter EMA50 (56109) / -2.5%</span></div>
+                <div class="rr"><span>Ziel 1:</span><span style="color:#00e676">+3.8% vom Einstieg</span></div>
+                <div class="rr"><span>CRV:</span><span style="color:#ffd740">1.5:1</span></div>
+              </div></div></details>
+        </div><div class="card" id="c-WTI">
+          <div class="ch">
+            <div class="ct"><span style="font-size:16px">🛢️</span>
+              <div><div class="sym">WTI</div>
+                <div class="nm">WTI Rohöl <span style="color:#ffb74d;font-size:8px">Rohstoff</span></div>
+                <div class="pr">107.74</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+              <div class="rb" style="color:#555;background:rgba(80,80,80,0.08);border-color:#55544">KEIN SIGNAL</div>
+              <div class="dir-badge" style="color:#00e676;background:rgba(0,230,118,0.10);border-color:#00e67644">▲ LONG</div>
+            </div>
+          </div>
+          <div class="sw"><div class="st"><div class="sf" style="width:32%;background:#555"></div></div>
+            <div class="sr"><span style="color:#2a2a2a;font-size:9px">SCORE</span>
+            <span style="color:#555;font-size:13px;font-weight:bold">32%</span></div></div>
+          <div class="sc-row">
+              <span style="color:#00e676">▲ LONG 32%</span>
+              <span style="color:#444">vs</span>
+              <span style="color:#f44336">▼ SHORT 27%</span>
+            </div>
+          <div class="badges"><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● EMA200</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ EMA50</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ RSI</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ BB</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ VOL</span><span class="badge" style="color:#2a2a2a;background:rgba(255,255,255,0.02);border-color:#2a2a2a44">○ KERZE</span><span class="badge" style="color:#00e676;background:rgba(0,230,118,0.08);border-color:#00e67644">● SAISON</span></div>
+          <div class="mg"><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">KURS</div><div class="mv" style="color:#00e676">107.74</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">RSI(14)</div><div class="mv" style="color:#444">62.3</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">EMA50 DIST</div><div class="mv" style="color:#444">+19.42%</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">EMA200</div><div class="mv" style="color:#00e676">BULL ✓</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">BB-BREITE</div><div class="mv" style="color:#444">92. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">ATR</div><div class="mv" style="color:#444">84. Pz.</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">VOL RATIO</div><div class="mv" style="color:#444">0.22x</div></div><div class="metric" style="border-color:#44422;background:rgba(255,255,255,0.02)"><div class="ml">KERZE</div><div class="mv" style="color:#444">Bearish Bar</div></div><div class="metric" style="border-color:#00e67622;background:rgba(0,230,118,0.07)"><div class="ml">SAISON</div><div class="mv" style="color:#00e676">68%</div></div></div>
+          <div class="lv-panel">
+              <div class="lv-title">HANDELSNIVEAUS</div>
+              <div class="lv-grid">
+                <div class="lv-row">
+                  <span class="lv-label">Einstieg</span>
+                  <span class="lv-val" style="color:#e0e0e0">107.74</span>
+                  <span class="lv-pct"></span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Stop-Loss</span>
+                  <span class="lv-val" style="color:#f44336">89.77</span>
+                  <span class="lv-pct" style="color:#f44336">-5.0%</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 1</span>
+                  <span class="lv-val" style="color:#00e676">114.20</span>
+                  <span class="lv-pct" style="color:#00e676">+6.0% · CRV 1.2:1</span>
+                </div>
+                <div class="lv-row">
+                  <span class="lv-label">▲ Take Profit 2</span>
+                  <span class="lv-val" style="color:#00b060">117.44</span>
+                  <span class="lv-pct" style="color:#00b060">+9.0% · CRV 1.8:1</span>
+                </div>
+                <div class="lv-row lv-pos">
+                  <span class="lv-label">Positionsgröße ¹</span>
+                  <span class="lv-val" style="color:#ffd740">6.0%</span>
+                  <span class="lv-pct" style="color:#555">bei 1% Kapitalrisiko</span>
+                </div>
+              </div>
+            </div>
+          <details class="ad"><summary>Analyse einblenden</summary><div class="ab">
+              <div class="as"><div class="al">SETUP-QUALITÄT</div><p>Nur 2/7 Signale aktiv. Kein klares Setup erkennbar.</p></div>
+              <div class="ac"><div><div class="al">STÄRKEN</div><ul><li>Kurs über EMA200 – intakter Aufwärtstrend</li><li>Saisonal 68% bullish – Rückenwind</li></ul></div>
+              <div><div class="al">RISIKEN</div><ul><li>Kurs 19.4% über EMA50 – zu weit ausgedehnt</li><li>BB ausgedehnt (92. Pz.) – Bewegung läuft bereits</li><li>Volumen 0.2x – schwache Überzeugung</li></ul></div></div>
+              <div class="ae" style="border-color:#f4433644;background:#f4433608">
+                <strong style="color:#f44336">MEIDEN</strong>
+                <span style="color:#777;font-size:11px"> — Zu viele Gegenindikationen.</span></div>
+              <div class="ar"><div class="al">RISIKOMANAGEMENT</div>
+                <div class="rr"><span>Stop-Loss:</span><span style="color:#ff9100">Unter EMA50 (90) / -2.5%</span></div>
+                <div class="rr"><span>Ziel 1:</span><span style="color:#00e676">+3.8% vom Einstieg</span></div>
+                <div class="rr"><span>CRV:</span><span style="color:#ffd740">1.5:1</span></div>
+              </div></div></details>
+        </div></div>
+<div class="hint"><div class="hint-t">💡 VERTIEFTE KI-ANALYSE IN CLAUDE</div>
+  <p>Diesen Report in <strong style="color:#444">claude.ai</strong> hochladen und fragen:<br>
+  <em>"Analysiere das beste Signal und gib eine konkrete Handelsstrategie mit Einstieg, Stop und Ziel."</em></p>
+</div>
+<div class="leg">
+  <div style="display:flex;align-items:center;gap:5px"><span style="width:6px;height:6px;border-radius:50%;background:#00e676;display:inline-block"></span><span style="color:#282828;font-size:8px">STARK ≥80%</span></div><div style="display:flex;align-items:center;gap:5px"><span style="width:6px;height:6px;border-radius:50%;background:#ffd740;display:inline-block"></span><span style="color:#282828;font-size:8px">MODERAT 60%</span></div><div style="display:flex;align-items:center;gap:5px"><span style="width:6px;height:6px;border-radius:50%;background:#ff9100;display:inline-block"></span><span style="color:#282828;font-size:8px">SCHWACH 40%</span></div><div style="display:flex;align-items:center;gap:5px"><span style="width:6px;height:6px;border-radius:50%;background:#555;display:inline-block"></span><span style="color:#282828;font-size:8px">KEIN SIGNAL</span></div>
+  <div style="margin-left:auto;display:flex;gap:10px">
+    <span style="color:#00e676;font-size:9px;font-weight:bold">▲ LONG</span>
+    <span style="color:#f44336;font-size:9px;font-weight:bold">▼ SHORT</span>
+  </div>
+</div>
+<div class="disc">¹ Positionsgröße = Kapital × 1% Risiko ÷ Abstand Stop-Loss. Richtwert, keine Empfehlung.<br>⚠ Keine Anlageberatung. Historische Wahrscheinlichkeiten sind keine Garantie. Daten via Yahoo Finance.</div>
+</body></html>
