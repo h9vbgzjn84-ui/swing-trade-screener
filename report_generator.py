@@ -1,6 +1,6 @@
 """
-report_generator.py – HTML-Report mit Long/Short Signalen
-Wortmann & Wember GmbH · Swing Trade Screener
+report_generator.py – HTML-Report mit Long/Short Signalen + KO-Scheine
+Swing Trade Screener
 """
 
 from datetime import datetime
@@ -38,6 +38,184 @@ def sbadge(active, label, invert=False):
     c   = "#00e676" if on else "#2a2a2a"
     bg  = "rgba(0,230,118,0.08)" if on else "rgba(255,255,255,0.02)"
     return f'<span class="badge" style="color:{c};background:{bg};border-color:{c}44">{"●" if on else "○"} {label}</span>'
+
+
+# ─── KO-Schein Berechnung ────────────────────────────────────────────────────
+
+def calc_ko_params(md: MarketData, direction: str, score_pct: int) -> dict | None:
+    """Berechnet KO-Schein Parameter aus Marktdaten."""
+    if not md or not md.price or score_pct < 50:
+        return None
+
+    price   = md.price
+    atr_pct = md.atr_pct or 1.5  # Fallback 1.5% wenn kein ATR
+
+    # Hebel basierend auf ATR-Volatilität
+    if atr_pct < 0.8:
+        lever_label = "6–8x"
+        lever_mid   = 7
+    elif atr_pct < 1.5:
+        lever_label = "4–6x"
+        lever_mid   = 5
+    elif atr_pct < 2.5:
+        lever_label = "3–5x"
+        lever_mid   = 4
+    else:
+        lever_label = "2–3x"
+        lever_mid   = 2
+
+    # Mindestabstand KO-Schwelle: 2.5x ATR + Puffer
+    min_dist_pct = max(atr_pct * 2.5, 3.0)
+
+    # Stop-Loss für Basiswert
+    stop_pct = max(atr_pct * 1.5, 2.0)
+    if direction == "LONG":
+        ko_level  = round(price * (1 - min_dist_pct / 100), 2)
+        stop_lvl  = round(price * (1 - stop_pct / 100), 2)
+        tp1       = round(price * (1 + stop_pct * 1.5 / 100), 2)
+        tp2       = round(price * (1 + stop_pct * 2.5 / 100), 2)
+    else:
+        ko_level  = round(price * (1 + min_dist_pct / 100), 2)
+        stop_lvl  = round(price * (1 + stop_pct / 100), 2)
+        tp1       = round(price * (1 - stop_pct * 1.5 / 100), 2)
+        tp2       = round(price * (1 - stop_pct * 2.5 / 100), 2)
+
+    tp1_pct = round(stop_pct * 1.5, 1)
+    tp2_pct = round(stop_pct * 2.5, 1)
+
+    # Max. Haltedauer nach Signalstärke
+    if score_pct >= 80:   max_days = 42
+    elif score_pct >= 65: max_days = 28
+    else:                 max_days = 14
+
+    # Warnung bei hoher Volatilität
+    vol_warning = atr_pct >= 2.5
+
+    return dict(
+        price       = price,
+        direction   = direction,
+        lever_label = lever_label,
+        lever_mid   = lever_mid,
+        min_dist_pct= round(min_dist_pct, 1),
+        ko_level    = ko_level,
+        stop_lvl    = stop_lvl,
+        stop_pct    = round(stop_pct, 1),
+        tp1         = tp1,
+        tp1_pct     = tp1_pct,
+        tp2         = tp2,
+        tp2_pct     = tp2_pct,
+        max_days    = max_days,
+        atr_pct     = round(atr_pct, 2),
+        vol_warning = vol_warning,
+    )
+
+
+def generate_ko_section(results: list) -> str:
+    """Generiert den kompletten KO-Scheine HTML-Abschnitt."""
+    eligible = []
+    for r in results:
+        md        = r["data"]
+        sc        = r.get("best_score") or {"pct": 0}
+        direction = r.get("best_direction", "LONG")
+        ko        = calc_ko_params(md, direction, sc["pct"])
+        if ko:
+            eligible.append((r, ko, sc["pct"]))
+
+    # Nach Score sortieren
+    eligible.sort(key=lambda x: x[2], reverse=True)
+
+    if not eligible:
+        return ""
+
+    cards_html = ""
+    for r, ko, pct in eligible:
+        inst    = r["instrument"]
+        sym     = inst["symbol"]
+        name    = inst["name"]
+        col, _  = rating_color(pct)
+        dc, _, dlabel = dir_style(ko["direction"])
+        fp      = fmt_price
+
+        vol_warn_html = ""
+        if ko["vol_warning"]:
+            vol_warn_html = '<div class="ko-warn">⚠ Hohe Volatilität – Hebel reduzieren, engeren Stop setzen</div>'
+
+        cards_html += f"""
+        <div class="ko-card">
+          <div class="ko-head">
+            <div>
+              <span class="ko-sym">{EMOJI.get(sym,"📊")} {name}</span>
+              <span class="ko-sub">{sym} · Kurs: {fp(ko["price"])}</span>
+            </div>
+            <div class="ko-badges">
+              <span class="ko-badge" style="color:{dc};background:{dc}11;border-color:{dc}44">{dlabel}</span>
+              <span class="ko-badge" style="color:{col};background:{col}11;border-color:{col}44">{pct}%</span>
+            </div>
+          </div>
+
+          <div class="ko-grid">
+            <div class="ko-field">
+              <div class="ko-label">EMPF. HEBEL</div>
+              <div class="ko-val" style="color:{col}">{ko["lever_label"]}</div>
+            </div>
+            <div class="ko-field">
+              <div class="ko-label">MAX. HALTEDAUER</div>
+              <div class="ko-val" style="color:{col}">{ko["max_days"]} Tage</div>
+            </div>
+            <div class="ko-field">
+              <div class="ko-label">KO-SCHWELLE ABSTAND</div>
+              <div class="ko-val" style="color:#ffd740">{ko["min_dist_pct"]}%</div>
+            </div>
+            <div class="ko-field">
+              <div class="ko-label">BEISPIEL KO-NIVEAU</div>
+              <div class="ko-val" style="color:#ffd740">{fp(ko["ko_level"])}</div>
+            </div>
+            <div class="ko-field">
+              <div class="ko-label">STOP-LOSS ({ko["stop_pct"]}%)</div>
+              <div class="ko-val" style="color:#f44336">{fp(ko["stop_lvl"])}</div>
+            </div>
+            <div class="ko-field">
+              <div class="ko-label">ATR VOLATILITÄT</div>
+              <div class="ko-val" style="color:#888">{ko["atr_pct"]}%</div>
+            </div>
+            <div class="ko-field">
+              <div class="ko-label">TP1 (+{ko["tp1_pct"]}%)</div>
+              <div class="ko-val" style="color:#00e676">{fp(ko["tp1"])}</div>
+            </div>
+            <div class="ko-field">
+              <div class="ko-label">TP2 (+{ko["tp2_pct"]}%)</div>
+              <div class="ko-val" style="color:#00b060">{fp(ko["tp2"])}</div>
+            </div>
+          </div>
+
+          <div class="ko-emittent">
+            <span class="ko-emit-label">EMITTENT</span>
+            <span class="ko-emit-val">DZ Bank &nbsp;·&nbsp; Société Générale</span>
+            <span class="ko-emit-note">(kein KO außerhalb Handelszeiten)</span>
+          </div>
+
+          {vol_warn_html}
+
+          <div class="ko-rules">
+            Stop-Loss Order direkt nach Kauf setzen &nbsp;·&nbsp;
+            Kein Halten über Nacht bei Hebel &gt;6 &nbsp;·&nbsp;
+            Max. 25% des KO-Budgets pro Position
+          </div>
+        </div>"""
+
+    return f"""
+    <div class="ko-section">
+      <div class="ko-section-head">
+        <div class="ko-section-title">KO-SCHEINE</div>
+        <div class="ko-section-sub">Automatisch berechnet aus Screener-Signalen · Nur Signale ≥ 50% · Kein Anlageberatung</div>
+      </div>
+      <div class="ko-cards">{cards_html}</div>
+      <div class="ko-disclaimer">
+        ¹ KO-Niveau ist ein Beispielwert – den tatsächlichen Schein immer auf Trade Republic selbst suchen und Produktblatt prüfen.<br>
+        ² Finanzierungskosten bei langer Haltedauer beachten – ideal: max. 4–6 Wochen.<br>
+        ³ Verluste aus KO-Scheinen landen im sonstigen Verlustverrechnungstopf (verrechenbar mit ETF-Gewinnen).
+      </div>
+    </div>"""
 
 
 def analyse_long(md: MarketData, seasonal: int, score: dict) -> dict:
@@ -134,7 +312,6 @@ def generate_report(results: list, output_path: str = None) -> str:
         dc, dbg, dlabel = dir_style(direction)
         tc       = TYPE_COLOR.get(itype,"#888")
 
-        # Metriken
         mx = ""
         if md:
             for lb,vl,ok in [
@@ -151,7 +328,6 @@ def generate_report(results: list, output_path: str = None) -> str:
                 mc = "#00e676" if ok else "#444"
                 mx += f'<div class="metric" style="border-color:{mc}22;background:{"rgba(0,230,118,0.07)" if ok else "rgba(255,255,255,0.02)"}"><div class="ml">{lb}</div><div class="mv" style="color:{mc}">{vl}</div></div>'
 
-        # Badges
         if md:
             if direction == "LONG":
                 bd = "".join([
@@ -170,7 +346,6 @@ def generate_report(results: list, output_path: str = None) -> str:
         else:
             bd = ""
 
-        # Score-Vergleich Long vs Short
         score_cmp = ""
         if sl and ss:
             score_cmp = f"""<div class="sc-row">
@@ -179,8 +354,6 @@ def generate_report(results: list, output_path: str = None) -> str:
               <span style="color:#f44336">▼ SHORT {ss['pct']}%</span>
             </div>"""
 
-
-        # Levels-Panel
         lv = r.get("levels", {})
         lvhtml = ""
         if lv and md:
@@ -220,7 +393,6 @@ def generate_report(results: list, output_path: str = None) -> str:
               </div>
             </div>"""
 
-        # Analyse
         ab = ""
         if md and sc["pct"] > 0:
             a = analyse_long(md, seasonal, sl) if direction=="LONG" else analyse_short(md, seasonal, ss)
@@ -272,8 +444,10 @@ def generate_report(results: list, output_path: str = None) -> str:
         col2,_ = rating_color(tp)
         tb = f'<div class="tb"><span style="font-size:20px">{EMOJI.get(ts,"📊")}</span><div><div style="color:{col2};font-size:8px;letter-spacing:.1em">STÄRKSTES SIGNAL</div><div style="color:#e0e0e0;font-size:14px;font-weight:bold">{top["instrument"]["name"]} ({ts}) <span style="color:{tc2}">{tl}</span> — {tp}%</div></div><a href="#c-{ts}" style="margin-left:auto;color:{col2};font-size:10px;text-decoration:none;border:1px solid {col2}44;padding:4px 12px;border-radius:3px">↓ DETAIL</a></div>'
 
-    # Typ-Gruppen Legende
     type_leg = "".join(f'<span style="color:{v};font-size:9px;margin-right:12px">■ {k}</span>' for k,v in TYPE_COLOR.items())
+
+    # KO-Sektion generieren
+    ko_section = generate_ko_section(results)
 
     html = f"""<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -323,14 +497,45 @@ h1{{color:#e0e0e0;font-size:19px;letter-spacing:.04em}}
 .ae{{padding:7px 11px;border-radius:4px;border:1px solid;margin-bottom:9px}}
 .ar{{background:rgba(255,255,255,0.02);border-radius:4px;padding:7px 11px;border:1px solid rgba(255,255,255,0.05)}}
 .rr{{display:flex;justify-content:space-between;padding:2px 0;font-size:11px;color:#444}}
+.lv-panel{{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:5px;padding:10px 12px;margin-bottom:9px}}
+.lv-title{{color:#00e676;font-size:8px;letter-spacing:.12em;margin-bottom:7px}}
+.lv-grid{{display:flex;flex-direction:column;gap:4px}}
+.lv-row{{display:flex;justify-content:space-between;align-items:center;font-size:10px}}
+.lv-label{{color:#444;flex:1}}
+.lv-val{{color:#ccc;font-weight:bold;text-align:right;min-width:60px}}
+.lv-pct{{color:#555;font-size:9px;text-align:right;min-width:90px}}
 .hint{{margin-top:16px;background:rgba(0,230,118,0.02);border:1px solid rgba(0,230,118,0.08);border-radius:6px;padding:12px 16px}}
 .hint-t{{color:#00e676;font-size:8px;letter-spacing:.12em;margin-bottom:5px}}
 .hint p{{color:#2a2a2a;font-size:11px;line-height:1.7;font-family:Georgia,serif}}
 .leg{{margin-top:16px;padding:10px 14px;border:1px solid rgba(255,255,255,0.03);border-radius:5px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}}
 .disc{{margin-top:11px;color:#161616;font-size:8px;line-height:1.6}}
+
+/* ── KO-Scheine Sektion ────────────────────────────────────────── */
+.ko-section{{margin-top:28px;border-top:1px solid rgba(255,255,255,0.05);padding-top:20px}}
+.ko-section-head{{margin-bottom:14px}}
+.ko-section-title{{color:#ffd740;font-size:13px;font-weight:bold;letter-spacing:.15em;margin-bottom:4px}}
+.ko-section-sub{{color:#2a2a2a;font-size:9px;letter-spacing:.05em}}
+.ko-cards{{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;margin-bottom:12px}}
+.ko-card{{background:rgba(255,215,64,0.02);border:1px solid rgba(255,215,64,0.10);border-radius:7px;padding:14px}}
+.ko-head{{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.04)}}
+.ko-sym{{color:#e0e0e0;font-size:12px;font-weight:bold;display:block}}
+.ko-sub{{color:#444;font-size:9px;margin-top:2px;display:block}}
+.ko-badges{{display:flex;gap:5px;align-items:center}}
+.ko-badge{{padding:3px 8px;border-radius:3px;font-size:9px;font-weight:bold;border:1px solid;letter-spacing:.05em}}
+.ko-grid{{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:10px}}
+.ko-field{{background:rgba(255,255,255,0.02);border-radius:4px;padding:8px 10px}}
+.ko-label{{color:#333;font-size:8px;letter-spacing:.1em;margin-bottom:3px}}
+.ko-val{{font-size:12px;font-weight:bold}}
+.ko-emittent{{display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(0,230,118,0.03);border:1px solid rgba(0,230,118,0.08);border-radius:4px;margin-bottom:8px;flex-wrap:wrap}}
+.ko-emit-label{{color:#333;font-size:8px;letter-spacing:.1em}}
+.ko-emit-val{{color:#00e676;font-size:11px;font-weight:bold}}
+.ko-emit-note{{color:#2a2a2a;font-size:9px}}
+.ko-warn{{color:#ff6b35;font-size:10px;padding:6px 10px;background:rgba(255,107,53,0.07);border:1px solid rgba(255,107,53,0.2);border-radius:4px;margin-bottom:8px}}
+.ko-rules{{color:#222;font-size:9px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.03);line-height:1.8}}
+.ko-disclaimer{{color:#1a1a1a;font-size:8px;line-height:1.8;padding:10px 14px;background:rgba(255,255,255,0.01);border-radius:4px;border:1px solid rgba(255,255,255,0.03)}}
 </style></head><body>
 <div class="hdr"><div class="hr">
-  <div><div class="brand">WORTMANN &amp; WEMBER GMBH</div>
+  <div><div class="brand">SWING TRADE SCREENER</div>
     <h1>SWING TRADE SCREENER</h1>
     <div class="sub">Live-Daten · Yahoo Finance · Long &amp; Short · {len(results)} Instrumente</div>
   </div>
@@ -345,6 +550,7 @@ h1{{color:#e0e0e0;font-size:19px;letter-spacing:.04em}}
   <div style="margin-top:10px">{type_leg}</div>
 </div>
 <div class="grid">{cards}</div>
+{ko_section}
 <div class="hint"><div class="hint-t">💡 VERTIEFTE KI-ANALYSE IN CLAUDE</div>
   <p>Diesen Report in <strong style="color:#444">claude.ai</strong> hochladen und fragen:<br>
   <em>"Analysiere das beste Signal und gib eine konkrete Handelsstrategie mit Einstieg, Stop und Ziel."</em></p>
