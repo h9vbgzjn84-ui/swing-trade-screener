@@ -104,11 +104,9 @@ def generate_ko_section(results: list) -> str:
         ko        = calc_ko_params(md, direction, pct)
         if ko:
             eligible.append((r, ko, pct))
-
     eligible.sort(key=lambda x: x[2], reverse=True)
     if not eligible:
         return ""
-
     cards_html = ""
     for r, ko, pct in eligible:
         inst  = r["instrument"]
@@ -117,80 +115,49 @@ def generate_ko_section(results: list) -> str:
         col,_ = rating_color(pct)
         dc,_,dlabel = dir_style(ko["direction"])
         fp    = fmt_price
-
         vol_warn_html = ""
         if ko["vol_warning"]:
-            vol_warn_html = '<div class="ko-warn">&#226;&#154;&#160; Hohe Volatilit&auml;t &middot; Hebel reduzieren, engeren Stop setzen</div>'
-
+            vol_warn_html = '<div class="ko-warn">&#9888; Hohe Volatilit&auml;t &ndash; Hebel reduzieren</div>'
+        dir_label = "Long" if ko["direction"] == "LONG" else "Short"
+        tr_url = f"https://app.traderepublic.com/search?q={name}+KO+{dir_label}"
         cards_html += f"""
         <div class="ko-card">
           <div class="ko-head">
-            <div>
-              <span class="ko-sym">{EMOJI.get(sym,"&#240;&#159;&#147;&#138;")} {name}</span>
-              <span class="ko-sub">{sym} &middot; Kurs: {fp(ko["price"])}</span>
-            </div>
+            <div><span class="ko-sym">{EMOJI.get(sym, "&#128202;")} {name}</span><span class="ko-sub">{sym} &middot; Kurs: {fp(ko["price"])}</span></div>
             <div class="ko-badges">
               <span class="ko-badge" style="color:{dc};background:{dc}11;border-color:{dc}44">{dlabel}</span>
               <span class="ko-badge" style="color:{col};background:{col}11;border-color:{col}44">{pct}%</span>
             </div>
           </div>
           <div class="ko-grid">
-            <div class="ko-field">
-              <div class="ko-label">EMPF. HEBEL</div>
-              <div class="ko-val" style="color:{col}">{ko["lever_label"]}</div>
-            </div>
-            <div class="ko-field">
-              <div class="ko-label">MAX. HALTEDAUER</div>
-              <div class="ko-val" style="color:{col}">{ko["max_days"]} Tage</div>
-            </div>
-            <div class="ko-field">
-              <div class="ko-label">KO-ABSTAND MIND.</div>
-              <div class="ko-val" style="color:#ffd740">{ko["min_dist_pct"]}%</div>
-            </div>
-            <div class="ko-field">
-              <div class="ko-label">BEISPIEL KO-NIVEAU</div>
-              <div class="ko-val" style="color:#ffd740">{fp(ko["ko_level"])}</div>
-            </div>
-            <div class="ko-field">
-              <div class="ko-label">STOP-LOSS ({ko["stop_pct"]}%)</div>
-              <div class="ko-val" style="color:#f44336">{fp(ko["stop_lvl"])}</div>
-            </div>
-            <div class="ko-field">
-              <div class="ko-label">ATR VOLATILIT&#195;&#132;T</div>
-              <div class="ko-val" style="color:#aaa">{ko["atr_pct"]}%</div>
-            </div>
-            <div class="ko-field">
-              <div class="ko-label">TP1 (+{ko["tp1_pct"]}%)</div>
-              <div class="ko-val" style="color:#00e676">{fp(ko["tp1"])}</div>
-            </div>
-            <div class="ko-field">
-              <div class="ko-label">TP2 (+{ko["tp2_pct"]}%)</div>
-              <div class="ko-val" style="color:#00b060">{fp(ko["tp2"])}</div>
-            </div>
+            <div class="ko-field"><div class="ko-label">EMPF. HEBEL</div><div class="ko-val" style="color:{col}">{ko["lever_label"]}</div></div>
+            <div class="ko-field"><div class="ko-label">MAX. HALTEDAUER</div><div class="ko-val" style="color:{col}">{ko["max_days"]} Tage</div></div>
+            <div class="ko-field"><div class="ko-label">KO-ABSTAND MIND.</div><div class="ko-val" style="color:#ffd740">{ko["min_dist_pct"]}%</div></div>
+            <div class="ko-field"><div class="ko-label">BEISPIEL KO-NIVEAU</div><div class="ko-val" style="color:#ffd740">{fp(ko["ko_level"])}</div></div>
+            <div class="ko-field"><div class="ko-label">STOP-LOSS ({ko["stop_pct"]}%)</div><div class="ko-val" style="color:#f44336">{fp(ko["stop_lvl"])}</div></div>
+            <div class="ko-field"><div class="ko-label">ATR VOLAT.</div><div class="ko-val" style="color:#aaa">{ko["atr_pct"]}%</div></div>
+            <div class="ko-field"><div class="ko-label">TP1 (+{ko["tp1_pct"]}%)</div><div class="ko-val" style="color:#00e676">{fp(ko["tp1"])}</div></div>
+            <div class="ko-field"><div class="ko-label">TP2 (+{ko["tp2_pct"]}%)</div><div class="ko-val" style="color:#00b060">{fp(ko["tp2"])}</div></div>
           </div>
-          <a class="ko-tr-link" href="https://www.google.com/search?q=DZ+Bank+{{quote_plus(name)}}+{{quote_plus(ko[\'direction\'])}}+Knock-Out+Trade+Republic" target="_blank">&#128269; Bei Trade Republic suchen &mdash; DZ Bank, kein Overnight-KO</a>
+          <a href="{tr_url}" target="_blank" style="display:block;text-align:center;padding:9px;background:rgba(255,215,64,0.08);border:1px solid rgba(255,215,64,0.30);border-radius:4px;color:#ffd740;font-size:12px;font-weight:bold;text-decoration:none;margin-bottom:9px;letter-spacing:.05em">
+            &#128269; Bei Trade Republic suchen &rarr;
+          </a>
           {vol_warn_html}
-          <div class="ko-rules">
-            Stop-Loss Order direkt nach Kauf setzen &nbsp;&#194;&#183;&nbsp;
-            Kein Halten &uuml;ber Nacht bei Hebel &gt;6 &nbsp;&#194;&#183;&nbsp;
-            Max. 25% des KO-Budgets pro Position
-          </div>
+          <div class="ko-rules">Stop-Loss direkt nach Kauf setzen &middot; Kein Halten &uuml;ber Nacht bei Hebel &gt;6 &middot; Max. 25% KO-Budget pro Position</div>
         </div>"""
-
     return f"""
     <div class="ko-section">
       <div class="ko-section-head">
-        <div class="ko-section-title">&#240;&#159;&#147;&#138; KO-SCHEINE</div>
-        <div class="ko-section-sub">Automatisch aus Screener-Signalen &middot; Nur Signale &middot; 50% &middot; Keine Anlageberatung</div>
+        <div class="ko-section-title">&#128202; KO-SCHEINE</div>
+        <div class="ko-section-sub">Automatisch aus Screener-Signalen &middot; Nur Signale &ge;50% &middot; Keine Anlageberatung</div>
       </div>
       <div class="ko-cards">{cards_html}</div>
       <div class="ko-disclaimer">
-        &middot; KO-Niveau ist ein Beispielwert &middot; Schein auf Trade Republic selbst suchen und Produktblatt pr&#195;&#188;fen.<br>
-        &middot; Finanzierungskosten bei langer Haltedauer beachten &middot; ideal: max. 4&#226;&#128;&#147;6 Wochen.<br>
-        &middot; Verluste aus KO-Scheinen landen im sonstigen Verlustverrechnungstopf (verrechenbar mit ETF-Gewinnen).
+        &sup1; KO-Niveau Beispielwert &ndash; Schein auf Trade Republic suchen und Produktblatt pruefen.<br>
+        &sup2; Finanzierungskosten beachten &ndash; ideal max. 4-6 Wochen.<br>
+        &sup3; Verluste im sonstigen Verlustverrechnungstopf (verrechenbar mit ETF-Gewinnen).
       </div>
     </div>"""
-
 
 def analyse_long(md: MarketData, seasonal: int, score: dict) -> dict:
     pct = score["pct"]
