@@ -1,5 +1,5 @@
 """
-report_generator.py â HTML-Report mit Long/Short Signalen + KO-Scheine
+report_generator.py &middot; HTML-Report mit Long/Short Signalen + KO-Scheine
 Swing Trade Screener
 """
 
@@ -40,7 +40,7 @@ def sbadge(active, label, invert=False):
     return f'<span class="badge" style="color:{c};background:{bg};border-color:{c}44">{"â" if on else "â"} {label}</span>'
 
 
-# âââ KO-Schein Berechnung ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+# &middot; KO-Schein Berechnung ââââââââââââââââââââââââââââââââââââââââââââââââââââ
 
 def calc_ko_params(md: MarketData, direction: str, score_pct: int) -> dict | None:
     if not md or not md.price or score_pct < 50:
@@ -119,14 +119,14 @@ def generate_ko_section(results: list) -> str:
 
         vol_warn_html = ""
         if ko["vol_warning"]:
-            vol_warn_html = '<div class="ko-warn">â  Hohe VolatilitÃ¤t â Hebel reduzieren, engeren Stop setzen</div>'
+            vol_warn_html = '<div class="ko-warn">â  Hohe Volatilit&auml;t &middot; Hebel reduzieren, engeren Stop setzen</div>'
 
         cards_html += f"""
         <div class="ko-card">
           <div class="ko-head">
             <div>
               <span class="ko-sym">{EMOJI.get(sym,"ð")} {name}</span>
-              <span class="ko-sub">{sym} Â· Kurs: {fp(ko["price"])}</span>
+              <span class="ko-sub">{sym} &middot; Kurs: {fp(ko["price"])}</span>
             </div>
             <div class="ko-badges">
               <span class="ko-badge" style="color:{dc};background:{dc}11;border-color:{dc}44">{dlabel}</span>
@@ -169,13 +169,13 @@ def generate_ko_section(results: list) -> str:
           </div>
           <div class="ko-emittent">
             <span class="ko-emit-label">EMITTENT</span>
-            <span class="ko-emit-val">DZ Bank &nbsp;Â·&nbsp; SociÃ©tÃ© GÃ©nÃ©rale</span>
-            <span class="ko-emit-note">(kein KO auÃerhalb Handelszeiten)</span>
+            <span class="ko-emit-val">DZ Bank &nbsp;Â·&nbsp; Soci&eacute;t&eacute; G&eacute;n&eacute;rale</span>
+            <span class="ko-emit-note">(kein KO au&szlig;erhalb Handelszeiten)</span>
           </div>
           {vol_warn_html}
           <div class="ko-rules">
             Stop-Loss Order direkt nach Kauf setzen &nbsp;Â·&nbsp;
-            Kein Halten Ã¼ber Nacht bei Hebel &gt;6 &nbsp;Â·&nbsp;
+            Kein Halten &uuml;ber Nacht bei Hebel &gt;6 &nbsp;Â·&nbsp;
             Max. 25% des KO-Budgets pro Position
           </div>
         </div>"""
@@ -184,13 +184,13 @@ def generate_ko_section(results: list) -> str:
     <div class="ko-section">
       <div class="ko-section-head">
         <div class="ko-section-title">ð KO-SCHEINE</div>
-        <div class="ko-section-sub">Automatisch aus Screener-Signalen Â· Nur Signale â¥ 50% Â· Keine Anlageberatung</div>
+        <div class="ko-section-sub">Automatisch aus Screener-Signalen &middot; Nur Signale &middot; 50% &middot; Keine Anlageberatung</div>
       </div>
       <div class="ko-cards">{cards_html}</div>
       <div class="ko-disclaimer">
-        Â¹ KO-Niveau ist ein Beispielwert â Schein auf Trade Republic selbst suchen und Produktblatt prÃ¼fen.<br>
-        Â² Finanzierungskosten bei langer Haltedauer beachten â ideal: max. 4â6 Wochen.<br>
-        Â³ Verluste aus KO-Scheinen landen im sonstigen Verlustverrechnungstopf (verrechenbar mit ETF-Gewinnen).
+        &middot; KO-Niveau ist ein Beispielwert &middot; Schein auf Trade Republic selbst suchen und Produktblatt prÃ¼fen.<br>
+        &middot; Finanzierungskosten bei langer Haltedauer beachten &middot; ideal: max. 4â6 Wochen.<br>
+        &middot; Verluste aus KO-Scheinen landen im sonstigen Verlustverrechnungstopf (verrechenbar mit ETF-Gewinnen).
       </div>
     </div>"""
 
@@ -198,51 +198,51 @@ def generate_ko_section(results: list) -> str:
 def analyse_long(md: MarketData, seasonal: int, score: dict) -> dict:
     pct = score["pct"]
     st, ri = [], []
-    if md.above_ema200: st.append("Kurs Ã¼ber EMA200 â intakter AufwÃ¤rtstrend")
-    else:               ri.append("Kurs unter EMA200 â kein Bull-Regime")
-    if md.near_ema50:   st.append(f"EMA50-Pullback ({md.dist_ema50:+.1f}%) â ideale Einstiegszone")
-    elif md.dist_ema50 and md.dist_ema50 > 5: ri.append(f"Kurs {md.dist_ema50:.1f}% Ã¼ber EMA50 â zu weit ausgedehnt")
-    elif md.dist_ema50 and md.dist_ema50 < -5: ri.append(f"Kurs {abs(md.dist_ema50):.1f}% unter EMA50 â mÃ¶glicher Trendbruch")
+    if md.above_ema200: st.append("Kurs Ã¼ber EMA200 &middot; intakter AufwÃ¤rtstrend")
+    else:               ri.append("Kurs unter EMA200 &middot; kein Bull-Regime")
+    if md.near_ema50:   st.append(f"EMA50-Pullback ({md.dist_ema50:+.1f}%) &middot; ideale Einstiegszone")
+    elif md.dist_ema50 and md.dist_ema50 > 5: ri.append(f"Kurs {md.dist_ema50:.1f}% Ã¼ber EMA50 &middot; zu weit ausgedehnt")
+    elif md.dist_ema50 and md.dist_ema50 < -5: ri.append(f"Kurs {abs(md.dist_ema50):.1f}% unter EMA50 &middot; mÃ¶glicher Trendbruch")
     if md.rsi:
-        if md.rsi_in_range_long: st.append(f"RSI {md.rsi:.0f} â neutrale Zone, kein Extremwert")
-        elif md.rsi > 70:        ri.append(f"RSI {md.rsi:.0f} Ã¼berkauft â Korrekturrisiko")
-        elif md.rsi < 30:        ri.append(f"RSI {md.rsi:.0f} Ã¼berverkauft â Trendbruchgefahr")
-    if md.low_bb_width:  st.append(f"BB komprimiert ({md.bb_width_pct:.0f}. Pz.) â Ausbruch vorbereitet")
-    else:                ri.append(f"BB ausgedehnt ({md.bb_width_pct:.0f}. Pz.) â Bewegung lÃ¤uft bereits")
-    if md.high_volume and md.volume_ratio: st.append(f"Volumen {md.volume_ratio:.1f}x â BestÃ¤tigung vorhanden")
-    elif md.volume_ratio and md.volume_ratio < 0.7: ri.append(f"Volumen {md.volume_ratio:.1f}x â schwache Ãberzeugung")
+        if md.rsi_in_range_long: st.append(f"RSI {md.rsi:.0f} &middot; neutrale Zone, kein Extremwert")
+        elif md.rsi > 70:        ri.append(f"RSI {md.rsi:.0f} Ã¼berkauft &middot; Korrekturrisiko")
+        elif md.rsi < 30:        ri.append(f"RSI {md.rsi:.0f} Ã¼berverkauft &middot; Trendbruchgefahr")
+    if md.low_bb_width:  st.append(f"BB komprimiert ({md.bb_width_pct:.0f}. Pz.) &middot; Ausbruch vorbereitet")
+    else:                ri.append(f"BB ausgedehnt ({md.bb_width_pct:.0f}. Pz.) &middot; Bewegung lÃ¤uft bereits")
+    if md.high_volume and md.volume_ratio: st.append(f"Volumen {md.volume_ratio:.1f}x &middot; BestÃ¤tigung vorhanden")
+    elif md.volume_ratio and md.volume_ratio < 0.7: ri.append(f"Volumen {md.volume_ratio:.1f}x &middot; schwache Ãberzeugung")
     if md.candle_bullish: st.append(f"Bullishes Muster ({md.candle_name})")
     else:                 ri.append(f"Kein bullishes Muster ({md.candle_name})")
-    if seasonal >= 65:    st.append(f"Saisonal {seasonal}% bullish â RÃ¼ckenwind")
-    elif seasonal < 50:   ri.append(f"Saisonal nur {seasonal}% bullish â Gegenwind")
+    if seasonal >= 65:    st.append(f"Saisonal {seasonal}% bullish &middot; RÃ¼ckenwind")
+    elif seasonal < 50:   ri.append(f"Saisonal nur {seasonal}% bullish &middot; Gegenwind")
     return _build_result(md, pct, st, ri, seasonal, "LONG")
 
 
 def analyse_short(md: MarketData, seasonal: int, score: dict) -> dict:
     pct = score["pct"]
     st, ri = [], []
-    if md.below_ema200: st.append("Kurs unter EMA200 â intakter AbwÃ¤rtstrend")
-    else:               ri.append("Kurs Ã¼ber EMA200 â kein Bear-Regime")
-    if md.near_ema50_from_above: st.append(f"Kurs nahe EMA50 von oben ({md.dist_ema50:+.1f}%) â Short-Pullback-Zone")
-    elif md.dist_ema50 and md.dist_ema50 < -5: ri.append(f"Kurs {abs(md.dist_ema50):.1f}% unter EMA50 â zu weit gefallen")
+    if md.below_ema200: st.append("Kurs unter EMA200 &middot; intakter AbwÃ¤rtstrend")
+    else:               ri.append("Kurs Ã¼ber EMA200 &middot; kein Bear-Regime")
+    if md.near_ema50_from_above: st.append(f"Kurs nahe EMA50 von oben ({md.dist_ema50:+.1f}%) &middot; Short-Pullback-Zone")
+    elif md.dist_ema50 and md.dist_ema50 < -5: ri.append(f"Kurs {abs(md.dist_ema50):.1f}% unter EMA50 &middot; zu weit gefallen")
     if md.rsi:
-        if md.rsi_in_range_short: st.append(f"RSI {md.rsi:.0f} â erhÃ¶hte Zone im Downtrend, Short-gÃ¼nstig")
-        elif md.rsi > 70:         st.append(f"RSI {md.rsi:.0f} Ã¼berkauft â Umkehrsignal fÃ¼r Short")
-        elif md.rsi < 35:         ri.append(f"RSI {md.rsi:.0f} Ã¼berverkauft â Short zu spÃ¤t, Rebound mÃ¶glich")
-    if md.low_bb_width:  st.append(f"BB komprimiert ({md.bb_width_pct:.0f}. Pz.) â Ausbruch nach unten mÃ¶glich")
-    else:                ri.append(f"BB ausgedehnt ({md.bb_width_pct:.0f}. Pz.) â Bewegung lÃ¤uft bereits")
-    if md.high_volume and md.volume_ratio: st.append(f"Volumen {md.volume_ratio:.1f}x â BestÃ¤tigung vorhanden")
-    elif md.volume_ratio and md.volume_ratio < 0.7: ri.append(f"Volumen {md.volume_ratio:.1f}x â schwache Ãberzeugung")
+        if md.rsi_in_range_short: st.append(f"RSI {md.rsi:.0f} &middot; erhÃ¶hte Zone im Downtrend, Short-gÃ¼nstig")
+        elif md.rsi > 70:         st.append(f"RSI {md.rsi:.0f} Ã¼berkauft &middot; Umkehrsignal fÃ¼r Short")
+        elif md.rsi < 35:         ri.append(f"RSI {md.rsi:.0f} Ã¼berverkauft &middot; Short zu spÃ¤t, Rebound mÃ¶glich")
+    if md.low_bb_width:  st.append(f"BB komprimiert ({md.bb_width_pct:.0f}. Pz.) &middot; Ausbruch nach unten mÃ¶glich")
+    else:                ri.append(f"BB ausgedehnt ({md.bb_width_pct:.0f}. Pz.) &middot; Bewegung lÃ¤uft bereits")
+    if md.high_volume and md.volume_ratio: st.append(f"Volumen {md.volume_ratio:.1f}x &middot; BestÃ¤tigung vorhanden")
+    elif md.volume_ratio and md.volume_ratio < 0.7: ri.append(f"Volumen {md.volume_ratio:.1f}x &middot; schwache Ãberzeugung")
     if md.candle_bearish: st.append(f"Bearisches Muster ({md.candle_name})")
     else:                 ri.append(f"Kein bearisches Muster ({md.candle_name})")
-    if seasonal <= 45:    st.append(f"Saisonal nur {seasonal}% bullish â Short-RÃ¼ckenwind")
-    elif seasonal >= 65:  ri.append(f"Saisonal {seasonal}% bullish â Gegenwind fÃ¼r Short")
+    if seasonal <= 45:    st.append(f"Saisonal nur {seasonal}% bullish &middot; Short-RÃ¼ckenwind")
+    elif seasonal >= 65:  ri.append(f"Saisonal {seasonal}% bullish &middot; Gegenwind fÃ¼r Short")
     return _build_result(md, pct, st, ri, seasonal, "SHORT")
 
 
 def _build_result(md, pct, st, ri, seasonal, direction):
     is_short = direction == "SHORT"
-    if pct >= 80:   emp, et = ("EINSTEIGEN","Signale bestÃ¤tigen sich â hohes Setup-Vertrauen.")
+    if pct >= 80:   emp, et = ("EINSTEIGEN","Signale bestÃ¤tigen sich &middot; hohes Setup-Vertrauen.")
     elif pct >= 65: emp, et = ("BEOBACHTEN","Solides Setup, auf finale BestÃ¤tigung warten.")
     elif pct >= 45: emp, et = ("WARTEN",    "Einzelne Signale vorhanden, Bild uneinheitlich.")
     else:           emp, et = ("MEIDEN",    "Zu viele Gegenindikationen.")
@@ -343,8 +343,8 @@ def generate_report(results: list, output_path: str = None) -> str:
               <div class="lv-grid">
                 <div class="lv-row"><span class="lv-label">Einstieg</span><span class="lv-val" style="color:#e0e0e0">{fv(lv["entry"])}</span><span class="lv-pct"></span></div>
                 <div class="lv-row"><span class="lv-label">{'â²' if not is_s else 'â¼'} Stop-Loss</span><span class="lv-val" style="color:#f44336">{fv(lv["stop"])}</span><span class="lv-pct" style="color:#f44336">-{lv["stop_pct"]:.1f}%</span></div>
-                <div class="lv-row"><span class="lv-label">{'â²' if not is_s else 'â¼'} Take Profit 1</span><span class="lv-val" style="color:#00e676">{fv(lv["tp1"])}</span><span class="lv-pct" style="color:#00e676">+{lv["tp1_pct"]:.1f}% Â· CRV {lv["crv1"]}:1</span></div>
-                <div class="lv-row"><span class="lv-label">{'â²' if not is_s else 'â¼'} Take Profit 2</span><span class="lv-val" style="color:#00b060">{fv(lv["tp2"])}</span><span class="lv-pct" style="color:#00b060">+{lv["tp2_pct"]:.1f}% Â· CRV {lv["crv2"]}:1</span></div>
+                <div class="lv-row"><span class="lv-label">{'â²' if not is_s else 'â¼'} Take Profit 1</span><span class="lv-val" style="color:#00e676">{fv(lv["tp1"])}</span><span class="lv-pct" style="color:#00e676">+{lv["tp1_pct"]:.1f}% &middot; CRV {lv["crv1"]}:1</span></div>
+                <div class="lv-row"><span class="lv-label">{'â²' if not is_s else 'â¼'} Take Profit 2</span><span class="lv-val" style="color:#00b060">{fv(lv["tp2"])}</span><span class="lv-pct" style="color:#00b060">+{lv["tp2_pct"]:.1f}% &middot; CRV {lv["crv2"]}:1</span></div>
                 <div class="lv-row"><span class="lv-label">PositionsgrÃ¶Ãe Â¹</span><span class="lv-val" style="color:#ffd740">{lv["pos_size"]}%</span><span class="lv-pct" style="color:#888">bei 1% Kapitalrisiko</span></div>
               </div>
             </div>"""
@@ -360,7 +360,7 @@ def generate_report(results: list, output_path: str = None) -> str:
               <div><div class="al">RISIKEN</div><ul>{ri_li}</ul></div></div>
               <div class="ae" style="border-color:{a["ec"]}44;background:{a["ec"]}08">
                 <strong style="color:{a["ec"]}">{a["emp"]}</strong>
-                <span style="color:#aaa;font-size:12px"> â {a["et"]}</span></div>
+                <span style="color:#aaa;font-size:12px"> &middot; {a["et"]}</span></div>
               <div class="ar"><div class="al">RISIKOMANAGEMENT</div>
                 <div class="rr"><span>Stop-Loss:</span><span style="color:#ff9100">{a["stop"]}</span></div>
                 <div class="rr"><span>Ziel 1:</span><span style="color:#00e676">{a["ziel"]}</span></div>
@@ -398,14 +398,14 @@ def generate_report(results: list, output_path: str = None) -> str:
         td = top.get("best_direction","LONG")
         tc2, _, tl = dir_style(td)
         col2,_ = rating_color(tp)
-        tb = f'<div class="tb"><span style="font-size:20px">{EMOJI.get(ts,"ð")}</span><div><div style="color:{col2};font-size:10px;letter-spacing:.1em">STÃRKSTES SIGNAL</div><div style="color:#e0e0e0;font-size:15px;font-weight:bold">{top["instrument"]["name"]} ({ts}) <span style="color:{tc2}">{tl}</span> â {tp}%</div></div><a href="#c-{ts}" style="margin-left:auto;color:{col2};font-size:11px;text-decoration:none;border:1px solid {col2}44;padding:4px 12px;border-radius:3px">â DETAIL</a></div>'
+        tb = f'<div class="tb"><span style="font-size:20px">{EMOJI.get(ts,"ð")}</span><div><div style="color:{col2};font-size:10px;letter-spacing:.1em">STÃRKSTES SIGNAL</div><div style="color:#e0e0e0;font-size:15px;font-weight:bold">{top["instrument"]["name"]} ({ts}) <span style="color:{tc2}">{tl}</span> &middot; {tp}%</div></div><a href="#c-{ts}" style="margin-left:auto;color:{col2};font-size:11px;text-decoration:none;border:1px solid {col2}44;padding:4px 12px;border-radius:3px">â DETAIL</a></div>'
 
     type_leg = "".join(f'<span style="color:{v};font-size:11px;margin-right:12px">â  {k}</span>' for k,v in TYPE_COLOR.items())
     ko_section = generate_ko_section(results)
 
     html = f"""<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Swing Trade Screener â {now.strftime("%d.%m.%Y")}</title>
+<title>Swing Trade Screener &middot; {now.strftime("%d.%m.%Y")}</title>
 <style>
 *{{box-sizing:border-box;margin:0;padding:0}}
 body{{background:#0a0a0a;color:#d0d0d0;font-family:'Courier New',monospace;padding:22px;max-width:1100px;margin:0 auto;line-height:1.5;font-size:13px}}
@@ -464,7 +464,7 @@ h1{{color:#ffffff;font-size:20px;letter-spacing:.04em}}
 .leg{{margin-top:16px;padding:10px 14px;border:1px solid rgba(255,255,255,0.06);border-radius:5px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}}
 .disc{{margin-top:11px;color:#666;font-size:10px;line-height:1.7}}
 
-/* ââ KO-Scheine âââââââââââââââââââââââââââââââââââââââââââââââââââ */
+/* &middot; KO-Scheine &middot; */
 .ko-section{{margin-top:32px;border-top:2px solid rgba(255,215,64,0.15);padding-top:22px}}
 .ko-section-head{{margin-bottom:16px}}
 .ko-section-title{{color:#ffd740;font-size:16px;font-weight:bold;letter-spacing:.1em;margin-bottom:5px}}
@@ -492,7 +492,7 @@ h1{{color:#ffffff;font-size:20px;letter-spacing:.04em}}
   <div>
     <div class="brand">SWING TRADE SCREENER</div>
     <h1>SWING TRADE SCREENER</h1>
-    <div class="sub">Live-Daten Â· Yahoo Finance Â· Long &amp; Short Â· {len(results)} Instrumente</div>
+    <div class="sub">Live-Daten &middot; Yahoo Finance &middot; Long &amp; Short &middot; {len(results)} Instrumente</div>
   </div>
   <div class="di">Erstellt: {now.strftime("%d.%m.%Y %H:%M")}<br>Yahoo Finance (~15 Min. VerzÃ¶gerung)</div>
 </div></div>
@@ -517,7 +517,7 @@ h1{{color:#ffffff;font-size:20px;letter-spacing:.04em}}
     <span style="color:#f44336;font-size:11px;font-weight:bold">â¼ SHORT</span>
   </div>
 </div>
-<div class="disc">Â¹ PositionsgrÃ¶Ãe = Kapital Ã 1% Risiko Ã· Abstand Stop-Loss. Richtwert, keine Empfehlung.<br>â  Keine Anlageberatung. Historische Wahrscheinlichkeiten sind keine Garantie. Daten via Yahoo Finance.</div>
+<div class="disc">Â¹ PositionsgrÃ¶Ãe = Kapital &middot; 1% Risiko &middot; Abstand Stop-Loss. Richtwert, keine Empfehlung.<br>â  Keine Anlageberatung. Historische Wahrscheinlichkeiten sind keine Garantie. Daten via Yahoo Finance.</div>
 </body></html>"""
 
     if output_path is None:
