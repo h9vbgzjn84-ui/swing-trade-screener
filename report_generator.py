@@ -47,7 +47,7 @@ def calc_ko_params(md: MarketData, direction: str, score_pct: int) -> dict | Non
         return None
 
     price   = md.price
-    atr_pct = md.atr_pct or 1.5
+    atr_pct = (md.atr_pct / 20.0) if (md.atr_pct and md.atr_pct > 10) else (md.atr_pct or 1.5)
 
     if atr_pct < 0.8:
         lever_label = "6â8x"
