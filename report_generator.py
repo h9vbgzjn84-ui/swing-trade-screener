@@ -439,7 +439,7 @@ h1{{color:#ffffff;font-size:20px;letter-spacing:.04em}}
 .ko-sym{{color:#fff;font-size:13px;font-weight:bold;display:block}}
 .ko-sub{{color:#888;font-size:11px;margin-top:2px;display:block}}
 .ko-badges{{display:flex;gap:5px;align-items:center}}
-.ko-badge{{padding:3px 9px;border-radius:3px;font-size:10px;font-weight:bold;border:1px solid;letter-spacing:.05em}}}
+.ko-badge{{padding:3px 9px;border-radius:3px;font-size:10px;font-weight:bold;border:1px solid;letter-spacing:.05em}}
 .ko-grid{{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}}
 .ko-field{{background:rgba(255,255,255,0.03);border-radius:4px;padding:9px 11px}}
 .ko-label{{color:#888;font-size:10px;letter-spacing:.08em;margin-bottom:4px}}
