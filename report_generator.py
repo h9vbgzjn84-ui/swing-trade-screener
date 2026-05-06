@@ -451,7 +451,7 @@ h1{{color:#ffffff;font-size:20px;letter-spacing:.04em}}
 .ko-warn{{color:#ff6b35;font-size:11px;padding:7px 11px;background:rgba(255,107,53,0.07);border:1px solid rgba(255,107,53,0.2);border-radius:4px;margin-bottom:9px}}
 .ko-rules{{color:#888;font-size:10px;padding-top:9px;border-top:1px solid rgba(255,255,255,0.05);line-height:1.9}}
 
-.ko-tr-link{{display:block;text-align:center;padding:10px 14px;background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.20);border-radius:4px;color:#00e676;font-size:12px;font-weight:bold;text-decoration:none;margin-bottom:10px;letter-spacing:.05em;}
+.ko-tr-link{{display:block;text-align:center;padding:10px 14px;background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.20);border-radius:4px;color:#00e676;font-size:12px;font-weight:bold;text-decoration:none;margin-bottom:10px;letter-spacing:.05em;}}
 .ko-tr-link:hover{{background:rgba(0,230,118,0.12);}}
 .ko-disclaimer{{color:#666;font-size:10px;line-height:1.9;padding:10px 14px;background:rgba(255,255,255,0.01);border-radius:4px;border:1px solid rgba(255,255,255,0.04)}}
 </style></head><body>
