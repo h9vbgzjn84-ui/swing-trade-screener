@@ -391,7 +391,7 @@ def generate_report(results: list, output_path: str = None) -> str:
             '<div class="rb" style="color:' + col + ';background:' + bg + ';border-color:' + col + '44">' + r["rating"] + '</div>'
             '<div class="dir-badge" style="color:' + dc + ';background:' + dbg + ';border-color:' + dc + '44">' + dlabel + '</div>'
             '</div></div>'
-            '<div class="sw"><div class="st"><div class="sf" style="width:' + str(pct) + '%;background:' + col + '"></div></div>'
+            '<div class="sw"><div class="st"><div class="sf" style="width:' + str(pct) + '%;background:' + dc + '"></div></div>'
             '<div class="sr"><span style="color:#888;font-size:11px">SCORE</span>'
             '<span style="color:' + col + ';font-size:14px;font-weight:bold">' + str(pct) + '%</span></div></div>'
             + score_cmp
