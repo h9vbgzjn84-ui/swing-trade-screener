@@ -243,11 +243,14 @@ def evaluate(board: Board) -> list[dict]:
             title="Dip-Overlay", window="Einstieg 22:00 Uhr",
             free=True, verdict="SIGNAL",
             reason=f"{names}: drei fallende Schlusskurse",
-            detail="Einstieg zum 22:00-Schluss, halten bis zum ersten grünen Schluss, "
-                   "höchstens 5 Handelstage. 3×-ETF statt KO (kein Barrier-Risiko im fallenden Markt). "
-                   "Kleinstes Risikobudget der drei Bausteine.",
+            detail="Einstieg zum 22:00-Schluss, Ausstieg beim ersten grünen 22:00-Schluss, "
+                   "spätestens nach 5 Handelstagen. Kein Kursziel - der Ausstieg ist die Bedingung, "
+                   "nicht ein Kurs. Erwartung: Ø +0,5 % je Trade einfach, Median +0,46 %, "
+                   "Trefferquote 77 %, Spanne −1,4 % bis +2,1 % (schlechtester Fall −4,9 %). "
+                   "3×-ETF statt KO, kleinstes Risikobudget der drei Bausteine.",
             warn=warn,
-            facts=[(s.name, ("über SMA200" if s.above_sma200 else "unter SMA200")) for s in active],
+            facts=([(s.name, ("über SMA200" if s.above_sma200 else "unter SMA200")) for s in active]
+                   + [("Ø Dauer", "1,5 Tage"), ("Ø je Trade", "+0,50 %"), ("Trefferquote", "77 %")]),
         ))
     else:
         near = [s for s in board.indices.values() if s.dip_supported and s.red_streak == 2]
@@ -256,7 +259,10 @@ def evaluate(board: Board) -> list[dict]:
             reason = "Zwei rote Tage - ein weiterer löst aus"
         else:
             det = ("Kein Index steht bei zwei fallenden Schlusskursen. "
-                   "Geprüft wird der 22:00-Schluss, nicht der Xetra-Schluss.")
+                   "Geprüft wird der 22:00-Schluss, nicht der Xetra-Schluss. "
+                   "Wenn es auslöst: Ø 1,5 Handelstage Haltedauer, in 63 % der Fälle schon nach "
+                   "einem Tag beendet. Läuft es nicht sofort, wird es meist schlechter - "
+                   "Tag 1 im Schnitt +1,2 %, jeder weitere Tag darunter.")
             reason = "Kein Signal"
         cards.append(dict(
             title="Dip-Overlay", window="Prüfung 21:55 Uhr",
