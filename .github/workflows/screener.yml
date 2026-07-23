@@ -1,8 +1,8 @@
-name: Swing Trade Screener
+name: Swing Trade Screener (Archiv, nur manuell)
 
+# Zeitplan stillgelegt - die Signaltafel uebernimmt den automatischen Lauf.
+# Dieser Workflow bleibt nur noch manuell startbar (Actions -> Run workflow).
 on:
-  schedule:
-    - cron: '45 19 * * 1-5'
   workflow_dispatch:
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
         run: pip install yfinance numpy pandas --quiet
 
       - name: Screener ausführen
-        run: python run.py
+        run: python run_screener_alt.py
 
       - name: Report auf GitHub veröffentlichen
         run: |
