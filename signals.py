@@ -1,6 +1,5 @@
 """
 signals.py - Regelwerk-Signale für die Index-Signaltafel
-Wortmann & Wember GmbH
 
 Enthaelt ausschliesslich Regeln, die im Split-Sample-Test (2016-21 / 2021-26)
 in beiden Zeithaelften Bestand hatten. Keine Indikator-Scores.
@@ -164,7 +163,8 @@ def evaluate(board: Board) -> list[dict]:
             title="Nasdaq Overnight", window="21:55 → 08:00 Uhr",
             free=True, verdict="FREI",
             reason=f"VIX {de(v,1)} unter 25",
-            detail=f"{size} · KO-Hebel 8–12 · Ausstieg 08:00 fix",
+            detail=f"{size} · KO-Hebel 8–12 · Einstieg 21:55, Ausstieg 08:00 fix. "
+                   f"Nach grünem Tag ist die Nacht historisch stärker. Nicht verlängern.",
             warn=("Unter der 200-Tage-Linie: halbe Größe."
                   if nq.above_sma200 is False else ""),
             facts=[("VIX (Vortag)", de(v,2)), ("Kurs", de(nq.price)),
@@ -175,7 +175,8 @@ def evaluate(board: Board) -> list[dict]:
             title="Nasdaq Overnight", window="21:55 → 08:00 Uhr",
             free=False, verdict="GESPERRT",
             reason=f"VIX {de(v,1)} ab 25",
-            detail="Ab VIX 25 wird das Übernacht-Risiko nicht bezahlt. Abends flat.",
+            detail="Ab VIX 25 wird das Übernacht-Risiko nicht bezahlt. Abends flat. "
+                   "Der Intraday-Handel bleibt davon unberührt.",
             facts=[("VIX (Vortag)", de(v,2)), ("Schwelle", "25,00")],
         ))
 
@@ -185,9 +186,12 @@ def evaluate(board: Board) -> list[dict]:
         title="Dow US-Session", window="15:30 → 22:00 Uhr",
         free=True, verdict="1,5× GRÖSSE" if boost else "FREI",
         reason=f"VIX {de(v,1)} über 30" if boost else f"VIX {de(v,1)} · Basisgröße",
-        detail=("Aufstockung über mehr Kapital bei niedrigerem Hebel, nicht über höheren Hebel."
+        detail=("Aufstockung über mehr Kapital bei niedrigerem Hebel, nicht über höheren Hebel. "
+                "Einstieg 15:30–16:00 oder ab 17:00, Ausstieg 22:00. Kein Gewinnziel."
                 if boost else
-                "Einstieg 15:30–16:00 oder ab 17:00. 16–17 Uhr ist die schwächste Stunde. Kein Gewinnziel."),
+                "Einstieg 15:30–16:00 oder ab 17:00, Ausstieg 22:00. Stark: 17–18 Uhr. "
+                "Schwach: 16–17 Uhr, dort Limits legen statt kaufen. Montag ist der beste Tag. "
+                "Kein Gewinnziel, kein Overnight."),
         facts=[("VIX (Vortag)", de(v,2)), ("Kurs", de(dji.price)),
                ("Boost ab", "30,00")],
     ))
@@ -197,7 +201,9 @@ def evaluate(board: Board) -> list[dict]:
         title="DAX Tages-Session", window="08:00 → 17:30 Uhr",
         free=True, verdict="FREI",
         reason="Tagesfenster, kein Overnight",
-        detail="DAX über Nacht ist ein Münzwurf mit Gap-Risiko - abends flat.",
+        detail="Stark: 17–18 Uhr und der US-Vorlauf ab 15:30. Schwach: 16–17 Uhr. "
+               "Die Eröffnung 08:00–09:00 nur als Breakout mit engem Stop, nicht blind kaufen. "
+               "Ausstieg 17:30 - über Nacht ist der DAX ein Münzwurf mit Gap-Risiko.",
         facts=[("Kurs", de(dax.price)),
                ("SMA200", "darüber" if dax.above_sma200 else "darunter")],
     ))
@@ -217,8 +223,9 @@ def evaluate(board: Board) -> list[dict]:
             title="Dip-Overlay", window="Einstieg 22:00 Uhr",
             free=True, verdict="SIGNAL",
             reason=f"{names}: drei fallende Schlusskurse",
-            detail="Halten bis zum ersten grünen Schluss, höchstens 5 Handelstage. "
-                   "3×-ETF statt KO. Kleinstes Risikobudget.",
+            detail="Einstieg zum 22:00-Schluss, halten bis zum ersten grünen Schluss, "
+                   "höchstens 5 Handelstage. 3×-ETF statt KO (kein Barrier-Risiko im fallenden Markt). "
+                   "Kleinstes Risikobudget der drei Bausteine.",
             warn=warn,
             facts=[(s.name, ("über SMA200" if s.above_sma200 else "unter SMA200")) for s in active],
         ))
@@ -228,7 +235,8 @@ def evaluate(board: Board) -> list[dict]:
             det = " · ".join(f"{s.name} unter {de(s.price)}" for s in near)
             reason = "Zwei rote Tage - ein weiterer löst aus"
         else:
-            det = "Kein Index steht bei zwei fallenden Schlusskursen."
+            det = ("Kein Index steht bei zwei fallenden Schlusskursen. "
+                   "Geprüft wird der 22:00-Schluss, nicht der Xetra-Schluss.")
             reason = "Kein Signal"
         cards.append(dict(
             title="Dip-Overlay", window="Prüfung 21:55 Uhr",
