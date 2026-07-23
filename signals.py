@@ -197,14 +197,18 @@ def evaluate(board: Board) -> list[dict]:
     ))
 
     # 3) DAX Tages-Session 08:00 -> 17:30
+    dax_boost = v > 30
     cards.append(dict(
         title="DAX Tages-Session", window="08:00 → 17:30 Uhr",
-        free=True, verdict="FREI",
-        reason="Tagesfenster, kein Overnight",
-        detail="Stark: 17–18 Uhr und der US-Vorlauf ab 15:30. Schwach: 16–17 Uhr. "
-               "Die Eröffnung 08:00–09:00 nur als Breakout mit engem Stop, nicht blind kaufen. "
-               "Ausstieg 17:30 - über Nacht ist der DAX ein Münzwurf mit Gap-Risiko.",
-        facts=[("Kurs", de(dax.price)),
+        free=True, verdict="1,5× GRÖSSE" if dax_boost else "FREI",
+        reason=(f"VIX {de(v,1)} über 30 · hohe Vola zahlt intraday" if dax_boost
+                else f"VIX {de(v,1)} · Basisgröße, kein Overnight"),
+        detail=("Stark: 17–18 Uhr und der US-Vorlauf ab 15:30. Schwach: 16–17 Uhr. "
+                "Die Eröffnung 08:00–09:00 nur als Breakout mit engem Stop, nicht blind kaufen. "
+                "Ausstieg 17:30 - über Nacht ist der DAX ein Münzwurf mit Gap-Risiko. "
+                "VIX sperrt hier nichts: ab 25 war die Session historisch am stärksten "
+                "(+0,10 % gegen +0,01 % darunter)."),
+        facts=[("Kurs", de(dax.price)), ("VIX (Vortag)", de(v,2)),
                ("SMA200", "darüber" if dax.above_sma200 else "darunter")],
     ))
 
