@@ -98,17 +98,18 @@ JS = """
 """ % MAX_REPORT_AGE_H
 
 REGELN_JA = [
-    ("Long", "ist die einzige Seite mit Rueckenwind."),
-    ("Montag", "ist in allen Indizes der beste Session-Tag."),
+    ("Long", "ist die einzige Seite mit Rückenwind."),
+    ("VIX steuert nur die Nacht:", "ab 25 kein Overnight. Tagsüber ist hohe Vola ein Plus, kein Warnsignal."),
+    ("Montag", "ist im Nasdaq und Dow der beste Tag; im DAX liegt Mittwoch gleichauf."),
     ("16\u201317 Uhr", "ist die schwächste Stunde \u2014 Limits legen statt kaufen."),
-    ("17\u201318 Uhr", "ist in allen Indizes positiv."),
+    ("17\u201318 Uhr", "ist in allen Indizes positiv, aber klein (0,01\u20130,02 %/Tag)."),
     ("Größe", "aus dem Risikobudget, nicht aus dem Bauch."),
     ("Vor FOMC, CPI, NFP", "Größe halbieren, nicht aussetzen."),
 ]
 REGELN_NEIN = [
     ("Keine Gewinnziele", "\u2014 sie kappen die Tage, die alles tragen."),
     ("Keine Kerzenfarben", "\u2014 weder Stunde noch Nacht noch 5\u2011Min\u2011Kerze prognostizieren."),
-    ("Kein Wochenend\u2011Exit", "\u2014 Freitag auf Montag ist der bestbezahlte Zeitraum."),
+    ("Mehrtägige Positionen freitags nicht glattstellen", "\u2014 Freitag auf Montag war der bestbezahlte Zeitraum. Gilt für Core und Dip-Overlay, nicht für die Tagesfenster (die sind abends ohnehin flat)."),
     ("Kein MACD, kein RSI\u2011Score", "\u2014 im Split\u2011Sample durchgefallen."),
     ("Kein Overnight", "im Dow und im DAX."),
     ("Neue Regel?", "Erst Split\u2011Sample\u2011Test, dann Geld."),
