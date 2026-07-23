@@ -1,11 +1,18 @@
 """
-run.py – Swing Trade Screener für GitHub Actions mit GitHub Pages
+run.py - Index-Signaltafel
 Wortmann & Wember GmbH
+
+Bricht ab, wenn die Datenlage unvollstaendig ist. Ein fehlgeschlagener Lauf ist
+besser als eine Seite, die veraltete Zahlen als aktuell ausgibt.
 """
 
-import logging, sys
+import logging
+import sys
 from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
+
+BERLIN = ZoneInfo("Europe/Berlin")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -16,41 +23,40 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 
-def run():
-    log.info("=" * 55)
-    log.info(f"SWING TRADE SCREENER – {datetime.now().strftime('%d.%m.%Y %H:%M:%S')} UTC")
-    log.info("=" * 55)
+def run() -> int:
+    now = datetime.now(BERLIN)
+    log.info("=" * 58)
+    log.info(f"INDEX-SIGNALTAFEL - {now:%d.%m.%Y %H:%M:%S} Uhr (Europe/Berlin)")
+    log.info("=" * 58)
 
-    log.info("SCHRITT 1: Marktdaten laden (Yahoo Finance)…")
-    from data_fetcher import fetch_all
-    results = fetch_all()
-    loaded = sum(1 for r in results if r["data"])
-    log.info(f"  → {loaded}/{len(results)} Instrumente geladen")
-    for r in results:
-        sc = r["score"]["pct"] if r["score"] else 0
-        log.info(f"  {r['instrument']['symbol']:6s}  {sc:3d}%  [{r['rating']}]  {r.get('best_direction','')}")
+    from signals import build_board, evaluate, thresholds
+    from report import generate
 
-    log.info("SCHRITT 2: HTML-Report erstellen…")
-    from report_generator import generate_report
+    try:
+        board = build_board()
+    except Exception as exc:
+        log.error(f"Datenabruf fehlgeschlagen: {exc}")
+        log.error("Report wird NICHT ueberschrieben - die alte Seite bleibt stehen.")
+        return 1
 
-    # Haupt-Report (mit Datum)
+    if len(board.indices) < 3:
+        log.error(f"Nur {len(board.indices)}/3 Indizes geladen - Abbruch.")
+        return 1
+
+    log.info("-" * 58)
+    for card in evaluate(board):
+        log.info(f"  {card['title']:<20} {card['verdict']:<14} {card['reason']}")
+    for t in thresholds(board):
+        log.info(f"  Schwelle {t['name']:<12} {t['value'] or '-':>10}  {t['text']}")
+
     Path("docs").mkdir(exist_ok=True)
-    dated = f"docs/report_{datetime.now().strftime('%Y%m%d')}.html"
-    generate_report(results, dated)
-
-    # index.html = immer aktuellster Report (für GitHub Pages)
-    generate_report(results, "docs/index.html")
-    log.info(f"  → docs/index.html (GitHub Pages)")
-
-    top = next((r for r in results if r.get("best_score") and r["best_score"]["pct"] >= 60), None)
-    log.info("-" * 55)
-    if top:
-        log.info(f"  ★ {top['instrument']['name']} ({top['instrument']['symbol']}) "
-                 f"{top.get('best_direction','')} – {top['best_score']['pct']}%")
-    else:
-        log.info("  Kein Signal ≥ 60% heute.")
-    log.info("=" * 55)
+    generate(board, "docs/index.html")
+    generate(board, f"docs/tafel_{now:%Y%m%d}.html")
+    log.info("-" * 58)
+    log.info("  docs/index.html geschrieben")
+    log.info("=" * 58)
+    return 0
 
 
 if __name__ == "__main__":
-    run()
+    sys.exit(run())
