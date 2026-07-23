@@ -7,7 +7,7 @@ from __future__ import annotations
 import html
 from pathlib import Path
 
-from signals import Board, MAX_REPORT_AGE_H, de, evaluate, thresholds
+from signals import Board, MAX_REPORT_AGE_H, de, evaluate, regime, thresholds
 
 CSS = """
 :root{
@@ -34,6 +34,8 @@ h1{font-family:"Barlow Condensed",sans-serif;font-size:clamp(38px,7vw,62px);
   padding:10px 0 22px;border-bottom:1px solid var(--linie);margin-bottom:26px}
 .stand b{color:var(--tinte);font-weight:600}
 #alt.warn{color:var(--alarm);font-weight:600}
+.zone-ok{color:var(--frei)!important}
+.zone-warn{color:var(--alarm)!important}
 
 /* Schaltfelder */
 .raster{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
@@ -99,7 +101,9 @@ JS = """
 
 REGELN_JA = [
     ("Long", "ist die einzige Seite mit Rückenwind."),
-    ("VIX steuert nur die Nacht:", "ab 25 kein Overnight. Tagsüber ist hohe Vola ein Plus, kein Warnsignal."),
+    ("Daytrading nur in VIX 16\u201323.", "Darunter \u2212100.800 \u20ac, dar\u00fcber \u2212144.800 \u20ac \u2014 au\u00dferhalb halbe Gr\u00f6\u00dfe, nur Einzeleinstiege, weiterer KO-Abstand. Die Regelstrategien oben gelten unabh\u00e4ngig davon."),
+    ("VIX ab 25:", "kein Overnight. Intraday bleibt erlaubt, aber reduziert."),
+    ("VIX steigt \u00fcber 10\u201315 % im laufenden Trade:", "schlie\u00dfen oder auf Einstand absichern."),
     ("Montag", "ist im Nasdaq und Dow der beste Tag; im DAX liegt Mittwoch gleichauf."),
     ("16\u201317 Uhr", "ist die schwächste Stunde \u2014 Limits legen statt kaufen."),
     ("17\u201318 Uhr", "ist in allen Indizes positiv, aber klein (0,01\u20130,02 %/Tag)."),
@@ -167,6 +171,7 @@ def generate(board: Board, path: str) -> None:
     <span>Stand <b id="alt">&mdash;</b></span>
     <span>Letzter Schluss <b>{board.indices['NQ'].last_close_date:%d.%m.%Y}</b></span>
     <span>VIX <b class="mono">{de(board.vix, 2)}</b> ({board.vix_date:%d.%m.})</span>
+    <span>Daytrading-Regime <b class="{'zone-ok' if regime(board.vix)[0]=='GEWINNZONE' else 'zone-warn'}">{regime(board.vix)[0]}</b></span>
   </div>
 
   <section class="raster">{''.join(_feld(c) for c in cards)}</section>
