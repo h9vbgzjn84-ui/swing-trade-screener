@@ -1,0 +1,43 @@
+name: Index-Signaltafel
+
+on:
+  schedule:
+    # Cron ist immer UTC. Zwei Eintraege, damit die Uhrzeit ganzjaehrig passt;
+    # run.py laeuft trotzdem korrekt, wenn beide feuern (idempotent).
+    - cron: '13 13 * * 1-5'   # Nachmittagslauf: Schwellen fuer den Abend
+    - cron: '23 20 * * 1-5'   # Sommer: 22:23 Berlin, nach US-Schluss
+    - cron: '23 21 * * 1-5'   # Winter: 22:23 Berlin, nach US-Schluss
+  workflow_dispatch:
+
+concurrency:
+  group: signaltafel
+  cancel-in-progress: false
+
+jobs:
+  tafel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Abhaengigkeiten installieren
+        run: pip install "yfinance==0.2.65" numpy pandas --quiet
+
+      - name: Signaltafel erzeugen
+        run: python run.py
+
+      - name: Veroeffentlichen
+        run: |
+          git config user.name  "Signaltafel Bot"
+          git config user.email "screener@wortmann-wember.de"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git add docs/
+          git diff --staged --quiet || git commit -m "Signaltafel $(TZ=Europe/Berlin date +'%Y-%m-%d %H:%M')"
+          git push
