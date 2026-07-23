@@ -1,6 +1,5 @@
 """
 report.py - erzeugt die statische Signaltafel (docs/index.html)
-Wortmann & Wember GmbH
 """
 
 from __future__ import annotations
@@ -157,7 +156,7 @@ def generate(board: Board, path: str) -> None:
 <body data-generated="{gen.isoformat()}">
 <div class="wrap">
   <header>
-    <p class="eyebrow">Wortmann &amp; Wember &middot; Index-Regelwerk v2</p>
+    <p class="eyebrow">Index-Regelwerk v2 &middot; validierte Regeln</p>
     <h1>Signaltafel</h1>
     <p class="sub">Was heute erlaubt ist &mdash; und was nicht.</p>
   </header>
@@ -177,12 +176,12 @@ def generate(board: Board, path: str) -> None:
   </section>
 
   <section class="block">
-    <h3>Gilt immer</h3>
+    <h3>Immer gültig</h3>
     <ul class="regeln">{''.join(f'<li><b>{a}</b> {b}</li>' for a, b in REGELN_JA)}</ul>
   </section>
 
   <section class="block">
-    <h3>Gilt nie</h3>
+    <h3>Beachten</h3>
     <ul class="regeln nein">{''.join(f'<li><b>{a}</b> {b}</li>' for a, b in REGELN_NEIN)}</ul>
   </section>
 
