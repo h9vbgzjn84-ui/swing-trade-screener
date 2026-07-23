@@ -148,6 +148,24 @@ def build_board() -> Board:
 # Regel-Auswertung: liefert die Freigaben, die auf der Tafel stehen
 # ---------------------------------------------------------------------------
 
+def regime(v: float) -> tuple[str, str]:
+    """Persoenliches VIX-Regime aus der eigenen Handelshistorie (743 Trades).
+    Betrifft NUR das diskretionaere Daytrading, nicht die Regelstrategien oben.
+    Gewinnzone 16-23; darunter und darueber war die eigene Bilanz tiefrot."""
+    if v < 16:
+        return ("RUHEZONE",
+                "Regelstrategie unverändert gültig. Eigenes Daytrading: unter VIX 16 waren es "
+                "−100.800 €. Nicht der Markt ist dort das Problem, sondern zu viele, zu schnelle "
+                "Trades, weil nichts passiert. Halbe Größe, keine zweite Tranche, max. 4 Trades.")
+    if v > 23:
+        return ("STRESSZONE",
+                "Regelstrategie unverändert gültig - der Index läuft bei hoher Vola sogar besser. "
+                "Eigenes Daytrading: über VIX 23 waren es −144.800 €, fast nur aus Nachkäufen. "
+                "Halbe Größe, nur Einzeleinstiege, weiterer KO-Abstand statt höherem Hebel. "
+                "Steigt der VIX um mehr als 10–15 % im laufenden Trade: schließen oder auf Einstand.")
+    return ("GEWINNZONE", "")
+
+
 def evaluate(board: Board) -> list[dict]:
     nq = board.indices["NQ"]
     dji = board.indices["DJI"]
@@ -165,8 +183,9 @@ def evaluate(board: Board) -> list[dict]:
             reason=f"VIX {de(v,1)} unter 25",
             detail=f"{size} · KO-Hebel 8–12 · Einstieg 21:55, Ausstieg 08:00 fix. "
                    f"Nach grünem Tag ist die Nacht historisch stärker. Nicht verlängern.",
-            warn=("Unter der 200-Tage-Linie: halbe Größe."
-                  if nq.above_sma200 is False else ""),
+            warn=" ".join(x for x in [
+                ("Unter der 200-Tage-Linie: halbe Größe." if nq.above_sma200 is False else ""),
+                regime(v)[1]] if x),
             facts=[("VIX (Vortag)", de(v,2)), ("Kurs", de(nq.price)),
                    ("SMA200", "darüber" if nq.above_sma200 else "darunter")],
         ))
@@ -181,33 +200,30 @@ def evaluate(board: Board) -> list[dict]:
         ))
 
     # 2) Dow US-Session 15:30 -> 22:00
-    boost = v > 30
+    rname, rwarn = regime(v)
     cards.append(dict(
         title="Dow US-Session", window="15:30 → 22:00 Uhr",
-        free=True, verdict="1,5× GRÖSSE" if boost else "FREI",
-        reason=f"VIX {de(v,1)} über 30" if boost else f"VIX {de(v,1)} · Basisgröße",
-        detail=("Aufstockung über mehr Kapital bei niedrigerem Hebel, nicht über höheren Hebel. "
-                "Einstieg 15:30–16:00 oder ab 17:00, Ausstieg 22:00. Kein Gewinnziel."
-                if boost else
-                "Einstieg 15:30–16:00 oder ab 17:00, Ausstieg 22:00. Stark: 17–18 Uhr. "
+        free=True, verdict="FREI",
+        reason=f"VIX {de(v,1)} · {rname}",
+        detail=("Einstieg 15:30–16:00 oder ab 17:00, Ausstieg 22:00. Stark: 17–18 Uhr. "
                 "Schwach: 16–17 Uhr, dort Limits legen statt kaufen. Montag ist der beste Tag. "
                 "Kein Gewinnziel, kein Overnight."),
+        warn=rwarn,
         facts=[("VIX (Vortag)", de(v,2)), ("Kurs", de(dji.price)),
-               ("Boost ab", "30,00")],
+               ("Gewinnzone", "16–23")],
     ))
 
     # 3) DAX Tages-Session 08:00 -> 17:30
-    dax_boost = v > 30
     cards.append(dict(
         title="DAX Tages-Session", window="08:00 → 17:30 Uhr",
-        free=True, verdict="1,5× GRÖSSE" if dax_boost else "FREI",
-        reason=(f"VIX {de(v,1)} über 30 · hohe Vola zahlt intraday" if dax_boost
-                else f"VIX {de(v,1)} · Basisgröße, kein Overnight"),
+        free=True, verdict="FREI",
+        reason=f"VIX {de(v,1)} · {rname} · kein Overnight",
         detail=("Stark: 17–18 Uhr und der US-Vorlauf ab 15:30. Schwach: 16–17 Uhr. "
                 "Die Eröffnung 08:00–09:00 nur als Breakout mit engem Stop, nicht blind kaufen. "
                 "Ausstieg 17:30 - über Nacht ist der DAX ein Münzwurf mit Gap-Risiko. "
-                "VIX sperrt hier nichts: ab 25 war die Session historisch am stärksten "
-                "(+0,10 % gegen +0,01 % darunter)."),
+                "Zum Index selbst: bei hohem VIX lief die Session im Schnitt besser (+0,10 % gegen "
+                "+0,01 %) - das ist der Index, nicht dein Ergebnis. Siehe Warnung."),
+        warn=rwarn,
         facts=[("Kurs", de(dax.price)), ("VIX (Vortag)", de(v,2)),
                ("SMA200", "darüber" if dax.above_sma200 else "darunter")],
     ))
