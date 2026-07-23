@@ -17,6 +17,8 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 
+import dax2200
+
 log = logging.getLogger(__name__)
 
 BERLIN = ZoneInfo("Europe/Berlin")
@@ -48,6 +50,7 @@ class IndexState:
     dip_active: bool
     dip_threshold: Optional[float]  # Schluss darunter -> Signal aktiv
     dip_supported: bool             # False bei fehlender 22:00-Quelle
+    close_2200: Optional[float] = None
     note: str = ""
 
 
@@ -123,6 +126,23 @@ def build_board() -> Board:
         streak = _red_streak(closes)
 
         supported = inst["close_at_2200"]
+        c2200 = None
+        if not supported:
+            # Yahoo liefert hier nur den Xetra-Schluss - 22:00-Kurse direkt von Dukascopy
+            try:
+                reihe = dax2200.schlusskurse_2200(12, now)
+                if len(reihe) >= 4:
+                    streak = dax2200.rote_serie(reihe)
+                    werte = list(reihe.values())
+                    c2200 = werte[-1]
+                    supported = True
+                    log.info(f"{inst['key']} 22:00-Schluss {c2200:.2f} aus Dukascopy "
+                             f"({len(reihe)} Tage, rote Serie {streak})")
+                else:
+                    log.warning(f"{inst['key']}: Dukascopy lieferte nur {len(reihe)} Tage")
+            except Exception as exc:
+                log.warning(f"{inst['key']}: Dukascopy nicht verfuegbar ({exc})")
+
         state = IndexState(
             key=inst["key"], name=inst["name"], price=price,
             last_close_date=stamp,
@@ -131,9 +151,10 @@ def build_board() -> Board:
             red_streak=streak if supported else 0,
             prev_close=float(closes[-2]),
             dip_active=bool(supported and streak >= 3),
-            dip_threshold=float(closes[-1]) if supported and streak == 2 else None,
+            dip_threshold=float(c2200 if c2200 is not None else closes[-1]) if supported and streak == 2 else None,
             dip_supported=supported,
-            note="" if supported else "Xetra-Schluss 17:30 - für das Dip-Signal ist eine 22:00-Quelle nötig.",
+            close_2200=c2200,
+            note="" if supported else "22:00-Kurse gerade nicht abrufbar - Dip-Signal für heute ausgesetzt.",
         )
         board.indices[inst["key"]] = state
         ages.append((now - stamp).total_seconds() / 3600)
@@ -224,7 +245,9 @@ def evaluate(board: Board) -> list[dict]:
                 "Zum Index selbst: bei hohem VIX lief die Session im Schnitt besser (+0,10 % gegen "
                 "+0,01 %) - das ist der Index, nicht dein Ergebnis. Siehe Warnung."),
         warn=rwarn,
-        facts=[("Kurs", de(dax.price)), ("VIX (Vortag)", de(v,2)),
+        facts=[("Xetra 17:30", de(dax.price)),
+               ("Schluss 22:00", de(dax.close_2200) if dax.close_2200 else "n/v"),
+               ("VIX (Vortag)", de(v,2)),
                ("SMA200", "darüber" if dax.above_sma200 else "darunter")],
     ))
 
@@ -255,7 +278,7 @@ def evaluate(board: Board) -> list[dict]:
     else:
         near = [s for s in board.indices.values() if s.dip_supported and s.red_streak == 2]
         if near:
-            det = " · ".join(f"{s.name} unter {de(s.price)}" for s in near)
+            det = " · ".join(f"{s.name} unter {de(s.close_2200 if s.close_2200 else s.price)}" for s in near)
             reason = "Zwei rote Tage - ein weiterer löst aus"
         else:
             det = ("Kein Index steht bei zwei fallenden Schlusskursen. "
@@ -288,11 +311,11 @@ def thresholds(board: Board) -> list[dict]:
                             kind="on" if s.above_sma200 else "watch"))
         elif s.red_streak == 2:
             out.append(dict(name=s.name, text="Dip-Signal, wenn der Schluss darunter liegt",
-                            value=de(s.price), kind="watch"))
+                            value=de(s.close_2200 if s.close_2200 else s.price), kind="watch"))
         else:
             need = 3 - s.red_streak
             out.append(dict(name=s.name,
                             text=("noch 1 roter Schlusskurs nötig" if need==1
                                   else f"noch {need} rote Schlusskurse nötig"),
-                            value=de(s.price), kind="off"))
+                            value=de(s.close_2200 if s.close_2200 else s.price), kind="off"))
     return out
