@@ -51,6 +51,7 @@ class IndexState:
     dip_threshold: Optional[float]  # Schluss darunter -> Signal aktiv
     dip_supported: bool             # False bei fehlender 22:00-Quelle
     close_2200: Optional[float] = None
+    week_return: Optional[float] = None
     note: str = ""
 
 
@@ -143,6 +144,9 @@ def build_board() -> Board:
             except Exception as exc:
                 log.warning(f"{inst['key']}: Dukascopy nicht verfuegbar ({exc})")
 
+        reihe_w = list(reihe.values()) if (c2200 is not None) else list(closes)
+        week_ret = (reihe_w[-1] / reihe_w[-6] - 1) if len(reihe_w) >= 6 else None
+
         state = IndexState(
             key=inst["key"], name=inst["name"], price=price,
             last_close_date=stamp,
@@ -154,6 +158,7 @@ def build_board() -> Board:
             dip_threshold=float(c2200 if c2200 is not None else closes[-1]) if supported and streak == 2 else None,
             dip_supported=supported,
             close_2200=c2200,
+            week_return=week_ret,
             note="" if supported else "22:00-Kurse gerade nicht abrufbar - Dip-Signal für heute ausgesetzt.",
         )
         board.indices[inst["key"]] = state
@@ -250,6 +255,34 @@ def evaluate(board: Board) -> list[dict]:
                ("VIX (Vortag)", de(v,2)),
                ("SMA200", "darüber" if dax.above_sma200 else "darunter")],
     ))
+
+    # 3b) Montags-Setup - nur zwischen Freitagsschluss und Montagsschluss sichtbar
+    if nq.last_close_date.weekday() == 4:
+        schwach = [x for x in board.indices.values()
+                   if x.week_return is not None and x.week_return < 0]
+        if schwach:
+            namen = ", ".join(x.name for x in schwach)
+            cards.append(dict(
+                title="Montags-Setup", window="Montag 15:30 → 22:00 Uhr",
+                free=True, verdict="LONG-FENSTER",
+                reason=f"Vorwoche negativ: {namen}",
+                detail="Nach einer negativen Woche war der Montag historisch deutlich besser als "
+                       "sonst: DAX Ø +0,09 % gegen +0,05 %, Dow Ø +0,17 % gegen +0,09 % - in beiden "
+                       "Testzeiträumen. Einstieg 15:30, Ausstieg 22:00, kein Gewinnziel. "
+                       "NICHT schon Freitag 21:55 einsteigen: Das Wochenend-Bein ist nur im DAX "
+                       "positiv, dort stark rückläufig, und trägt Gaps bis −4 %.",
+                facts=[(x.name, f"{de(x.week_return*100,2)} %") for x in schwach],
+            ))
+        else:
+            cards.append(dict(
+                title="Montags-Setup", window="Montag 15:30 → 22:00 Uhr",
+                free=False, verdict="KEIN VORTEIL",
+                reason="Vorwoche in allen Indizes positiv",
+                detail="Der Montagsvorteil kommt aus der Gegenbewegung nach schwachen Wochen. "
+                       "Nach einer starken Woche bleibt nur der normale Session-Edge.",
+                facts=[(x.name, f"{de(x.week_return*100,2)} %")
+                       for x in board.indices.values() if x.week_return is not None],
+            ))
 
     # 4) Dip-Overlay
     active = [s for s in board.indices.values() if s.dip_active]
