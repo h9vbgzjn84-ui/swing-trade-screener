@@ -28,16 +28,30 @@ SKALA = 1000.0
 TIMEOUT = 20
 
 
+_UA = "Mozilla/5.0 (compatible; index-signaltafel/1.0)"
+
+
+def _laden(dt_utc: datetime) -> bytes:
+    """Roh-Bytes einer Stunde. Mehrere Versuche, HTTPS zuerst.
+    Dukascopy drosselt Cloud-/CI-IPs; darum User-Agent und Retry."""
+    pfad = (f"datafeed/{INSTRUMENT}/{dt_utc.year}/{dt_utc.month - 1:02d}/"
+            f"{dt_utc.day:02d}/{dt_utc.hour:02d}h_ticks.bi5")
+    for basis in ("https://datafeed.dukascopy.com/",
+                  "http://datafeed.dukascopy.com/"):
+        for versuch in range(3):
+            try:
+                req = urllib.request.Request(basis + pfad, headers={"User-Agent": _UA})
+                return urllib.request.urlopen(req, timeout=TIMEOUT).read()
+            except Exception as exc:
+                log.debug(f"Dukascopy {dt_utc:%Y-%m-%d %H}h Versuch {versuch + 1}: {exc}")
+                import time
+                time.sleep(1.5 * (versuch + 1))
+    return b""
+
+
 def _stunde(dt_utc: datetime) -> list[tuple[int, float]]:
     """Alle Ticks einer UTC-Stunde. Leere Liste, wenn nichts vorliegt."""
-    url = (f"http://datafeed.dukascopy.com/datafeed/{INSTRUMENT}/"
-           f"{dt_utc.year}/{dt_utc.month - 1:02d}/{dt_utc.day:02d}/"
-           f"{dt_utc.hour:02d}h_ticks.bi5")
-    try:
-        raw = urllib.request.urlopen(url, timeout=TIMEOUT).read()
-    except Exception as exc:
-        log.debug(f"Dukascopy {dt_utc:%Y-%m-%d %H}h nicht abrufbar: {exc}")
-        return []
+    raw = _laden(dt_utc)
     if not raw:
         return []
     try:
