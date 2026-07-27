@@ -122,6 +122,22 @@ def build_board() -> Board:
         row, stamp, sub = _last_completed(df, now)
         closes = sub["Close"].values.astype(float)
 
+        # Yahoo hinkt manchmal einen Handelstag hinterher (v.a. montags frueh).
+        # Fehlt der juengste Schluss, aus dem passenden CFD ergaenzen.
+        try:
+            nach = dax2200.letzter_schluss(inst["yahoo"], now)
+            if nach:
+                cfd_tag, cfd_kurs = nach
+                if cfd_tag > stamp.date():
+                    closes = np.append(closes, cfd_kurs)
+                    stamp = datetime(cfd_tag.year, cfd_tag.month, cfd_tag.day,
+                                     22, tzinfo=BERLIN)
+                    row = row.copy(); row["Close"] = cfd_kurs
+                    log.info(f"{inst['key']}: Yahoo-Rueckstand per CFD ergaenzt "
+                             f"({cfd_tag} {cfd_kurs:.2f})")
+        except Exception as exc:
+            log.debug(f"{inst['key']}: CFD-Nachtrag uebersprungen ({exc})")
+
         sma200 = float(np.mean(closes[-200:])) if len(closes) >= 200 else None
         price = float(row["Close"])
         streak = _red_streak(closes)
