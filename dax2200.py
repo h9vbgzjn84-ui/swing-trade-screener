@@ -27,14 +27,21 @@ INSTRUMENT = "DEUIDXEUR"
 SKALA = 1000.0
 TIMEOUT = 20
 
+# Dukascopy-CFD je Yahoo-Ticker - fuer den Fallback, wenn Yahoo einen Tag zurueckliegt
+CFD = {
+    "^GDAXI": "DEUIDXEUR",
+    "^DJI": "USA30IDXUSD",
+    "^NDX": "USATECHIDXUSD",
+}
+
 
 _UA = "Mozilla/5.0 (compatible; index-signaltafel/1.0)"
 
 
-def _laden(dt_utc: datetime) -> bytes:
+def _laden(dt_utc: datetime, instrument: str = INSTRUMENT) -> bytes:
     """Roh-Bytes einer Stunde. Mehrere Versuche, HTTPS zuerst.
     Dukascopy drosselt Cloud-/CI-IPs; darum User-Agent und Retry."""
-    pfad = (f"datafeed/{INSTRUMENT}/{dt_utc.year}/{dt_utc.month - 1:02d}/"
+    pfad = (f"datafeed/{instrument}/{dt_utc.year}/{dt_utc.month - 1:02d}/"
             f"{dt_utc.day:02d}/{dt_utc.hour:02d}h_ticks.bi5")
     for basis in ("https://datafeed.dukascopy.com/",
                   "http://datafeed.dukascopy.com/"):
@@ -49,9 +56,9 @@ def _laden(dt_utc: datetime) -> bytes:
     return b""
 
 
-def _stunde(dt_utc: datetime) -> list[tuple[int, float]]:
+def _stunde(dt_utc: datetime, instrument: str = INSTRUMENT) -> list[tuple[int, float]]:
     """Alle Ticks einer UTC-Stunde. Leere Liste, wenn nichts vorliegt."""
-    raw = _laden(dt_utc)
+    raw = _laden(dt_utc, instrument)
     if not raw:
         return []
     try:
@@ -65,7 +72,8 @@ def _stunde(dt_utc: datetime) -> list[tuple[int, float]]:
     return ticks
 
 
-def schlusskurse_2200(tage: int = 14, jetzt: datetime | None = None) -> dict:
+def schlusskurse_2200(tage: int = 14, jetzt: datetime | None = None,
+                      instrument: str = INSTRUMENT) -> dict:
     """Letzte Schlusskurse um 22:00 Berlin, aelteste zuerst.
 
     Der Schluss eines Tages ist der letzte Tick in der Stunde 21:00-22:00 Berlin.
@@ -83,12 +91,25 @@ def schlusskurse_2200(tage: int = 14, jetzt: datetime | None = None) -> dict:
         versuche += 1
         if tag.weekday() < 5:
             start = datetime(tag.year, tag.month, tag.day, 21, tzinfo=BERLIN)
-            ticks = _stunde(start.astimezone(UTC))
+            ticks = _stunde(start.astimezone(UTC), instrument)
             if ticks:
                 out[tag] = ticks[-1][1]
         tag -= timedelta(days=1)
 
     return dict(sorted(out.items()))
+
+
+def letzter_schluss(yahoo_ticker: str, jetzt: datetime | None = None):
+    """Letzter 22:00-Schluss (Datum, Kurs) fuer einen Yahoo-Ticker via CFD-Fallback.
+    None, wenn kein CFD hinterlegt oder nichts abrufbar ist."""
+    instr = CFD.get(yahoo_ticker)
+    if not instr:
+        return None
+    reihe = schlusskurse_2200(2, jetzt, instr)
+    if not reihe:
+        return None
+    tag, kurs = list(reihe.items())[-1]
+    return tag, kurs
 
 
 def rote_serie(closes: dict) -> int:
