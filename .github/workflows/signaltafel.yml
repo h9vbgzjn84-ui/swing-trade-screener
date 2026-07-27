@@ -4,7 +4,7 @@ on:
   schedule:
     # Cron ist immer UTC. Zwei Eintraege, damit die Uhrzeit ganzjaehrig passt;
     # run.py laeuft trotzdem korrekt, wenn beide feuern (idempotent).
-    - cron: '13 13 * * 1-5'   # Nachmittagslauf: Schwellen fuer den Abend
+    - cron: '43 15 * * 1-5'   # Nachmittagslauf 17:43 Berlin: nach Xetra-Schluss, Vortagesdaten sicher da
     - cron: '23 20 * * 1-5'   # Sommer: 22:23 Berlin, nach US-Schluss
     - cron: '23 21 * * 1-5'   # Winter: 22:23 Berlin, nach US-Schluss
   workflow_dispatch:
